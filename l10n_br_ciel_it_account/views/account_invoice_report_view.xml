@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="cl_custom_view_account_invoice_report_search_inherit" model="ir.ui.view">
+        <field name="name">cl.custom.account.invoice.report.search.inherit</field>
+        <field name="model">account.invoice.report</field>
+        <field name="inherit_id" ref="account.view_account_invoice_report_search"/>
+        <field name="arch" type="xml">
+            <field name="invoice_user_id" position="after">
+                <field name="l10n_br_icms_aliquota"/>
+                <field name="l10n_br_icms_valor"/>
+                <field name="l10n_br_icmsst_aliquota"/>
+                <field name="l10n_br_icmsst_valor"/>
+                <field name="l10n_br_icmsst_mva"/>
+                <field name="l10n_br_ipi_aliquota"/>
+                <field name="l10n_br_ipi_valor"/>
+                <field name="l10n_br_pis_aliquota"/>
+                <field name="l10n_br_pis_valor"/>
+                <field name="l10n_br_cofins_aliquota"/>
+                <field name="l10n_br_cofins_valor"/>
+            </field>
+        </field>
+    </record>
+</odoo>

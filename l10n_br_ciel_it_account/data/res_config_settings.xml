@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- 
+    <data noupdate="1">
+    
+        <record id="l10n_br_ciel_it_account_config_settings" model="res.config.settings">
+            <field name="paperformat_id" ref="base.paperformat_euro"/>
+            <field name="group_sale_delivery_address" eval="True"/>
+            <field name="group_uom" eval="True"/>
+            <field name="group_discount_per_so_line" eval="True"/>
+            <field name="group_product_pricelist" eval="True"/>
+            <field name="product_pricelist_setting" eval="'advanced'"/>
+            <field name="show_line_subtotals_tax_selection" eval="'tax_included'"/>
+            <field name="portal_confirmation_sign" eval="False"/>
+            <field name="group_auto_done_setting" eval="True"/>
+            <field name="group_display_incoterm" eval="True"/>
+            <field name="lock_confirmed_po" eval="True"/>
+            <field name="stock_move_sms_validation" eval="False"/>
+            <field name="group_stock_multi_locations" eval="True"/>
+            <field name="group_stock_adv_location" eval="True"/>
+            <field name="module_account_3way_match" eval="True"/>
+            <field name="module_partner_autocomplete" eval="False"/>
+            <field name="module_account_taxcloud" eval="False"/>
+            <field name="module_account_invoice_extract" eval="False"/>
+            <field name="module_account_predictive_bills" eval="False"/>
+            <field name="module_account_check_printing" eval="False"/>
+            <field name="module_account_yodlee" eval="False"/>
+            <field name="sale_tax_id" eval="False"/>
+            <field name="purchase_tax_id" eval="False"/>
+        </record>
+
+        <function model="res.config.settings" name="execute">
+            <value model="res.config.settings" search="[('id', '=', ref('l10n_br_ciel_it_account_config_settings'))]"/>
+        </function>
+
+    </data>
+    -->
+    
+</odoo>

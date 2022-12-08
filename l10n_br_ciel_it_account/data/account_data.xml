@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <data noupdate="1">
+
+        <record id="sequence_comissao" model="ir.sequence">
+            <field name="name">Comissão</field>
+            <field name="code">l10n_br_ciel_it_account.comissao</field>
+            <field name="prefix">COMISSÃO/%(range_year)s/</field>
+            <field eval="1" name="number_next"/>
+            <field eval="1" name="number_increment"/>
+            <field eval="True" name="use_date_range"/>
+            <field eval="False" name="company_id"/>
+            <field name="padding">4</field>
+        </record>
+
+        <record id="sequence_dfe" model="ir.sequence">
+            <field name="name">DF-e</field>
+            <field name="code">l10n_br_ciel_it_account.dfe</field>
+            <field name="prefix">DFE/%(range_year)s/</field>
+            <field eval="1" name="number_next"/>
+            <field eval="1" name="number_increment"/>
+            <field eval="True" name="use_date_range"/>
+            <field eval="False" name="company_id"/>
+            <field name="padding">4</field>
+        </record>
+
+        <record id="sequence_inutilizar_nfe" model="ir.sequence">
+            <field name="name">Inutilizar NF-e</field>
+            <field name="code">l10n_br_ciel_it_account.inutilizar.nfe</field>
+            <field name="prefix">INUT-NFE/%(range_year)s/</field>
+            <field eval="1" name="number_next"/>
+            <field eval="1" name="number_increment"/>
+            <field eval="True" name="use_date_range"/>
+            <field eval="False" name="company_id"/>
+            <field name="padding">4</field>
+        </record>
+
+        <record id="sequence_mdfe" model="ir.sequence">
+            <field name="name">MDF-e</field>
+            <field name="code">l10n_br_ciel_it_account.mdfe</field>
+            <field name="prefix">MDFE/%(range_year)s/</field>
+            <field eval="1" name="number_next"/>
+            <field eval="1" name="number_increment"/>
+            <field eval="True" name="use_date_range"/>
+            <field eval="False" name="company_id"/>
+            <field name="padding">4</field>
+        </record>
+
+        <record id="sequence_numero_mdfe" model="ir.sequence">
+            <field name="name">Numero MDF-e</field>
+            <field name="code">l10n_br_ciel_it_account.mdfe.l10n_br_numero_mdfe</field>
+            <field eval="1" name="number_next"/>
+            <field eval="1" name="number_increment"/>
+        </record>
+
+        <record id="sequence_numero_ndfe" model="ir.sequence">
+            <field name="name">NF-e</field>
+            <field name="code">l10n_br_ciel_it_account.account.move.l10n_br_numero_ndfe</field>
+            <field eval="1" name="number_next"/>
+            <field eval="1" name="number_increment"/>
+        </record>
+
+        <record id="sequence_numero_nfse" model="ir.sequence">
+            <field name="name">NFS-e</field>
+            <field name="code">l10n_br_ciel_it_account.account.move.l10n_br_numero_nfse</field>
+            <field eval="1" name="number_next"/>
+            <field eval="1" name="number_increment"/>
+        </record>
+
+        <record id="email_template_xmlpdf" model="mail.template">
+            <field name="name">Documento Fiscal: Send by email</field>
+            <field name="model_id" ref="l10n_br_ciel_it_account.model_l10n_br_ciel_it_account_fiscal_report"/>
+            <field name="subject">Documento Fiscal: Arquivos</field>
+            <field name="email_from">${user.email_formatted | safe}</field>
+            <field name="email_to"></field>
+            <field name="body_html" type="html">
+                <div style="margin: 0px; padding: 0px;">
+                    <p style="margin: 0px; padding: 0px; font-size: 13px;">
+                        Prezados,
+                        <br/><br/>
+                        Em anexo segue arquivo eletrônico com dados dos documentos fiscais do período.
+                        <br/><br/>
+                    </p>
+                </div>
+            </field>
+            <field name="user_signature" eval="True"/>
+        </record>
+
+        <record id="email_template_nfe" model="mail.template">
+            <field name="name">NF-e: Send by email</field>
+            <field name="model_id" ref="account.model_account_move"/>
+            <field name="subject">Nota Fiscal Eletrônica ${object.l10n_br_numero_nf}</field>
+            <field name="email_from">${(object.user_id.email_formatted or user.email_formatted) | safe}</field>
+            <field name="email_to">${object.l10n_br_nfe_emails}</field>
+            <field name="body_html" type="html">
+                <div style="margin: 0px; padding: 0px;">
+                    <p style="margin: 0px; padding: 0px; font-size: 13px;">
+                        Prezado <strong>${object.partner_id.l10n_br_razao_social}</strong>,
+                        <br/><br/>
+                        Em anexo segue arquivo eletrônico referente à sua nota fiscal eletrônica (NF-e).
+                        <br/><br/>
+                        <ul>
+                            <li><p>Número: ${object.l10n_br_numero_nf}</p></li>
+                            <li><p>Série: ${object.l10n_br_serie_nf}</p></li>
+                            <li><p>Chave de acesso: ${object.l10n_br_chave_nf}</p></li>
+                        </ul>
+                    </p>
+                </div>
+            </field>
+            <field name="lang">${object.partner_id.lang}</field>
+            <field name="user_signature" eval="True"/>
+        </record>
+
+        <record id="email_template_boleto" model="mail.template">
+            <field name="name">Boleto: Send by email</field>
+            <field name="model_id" ref="account.model_account_move"/>
+            <field name="subject">Nota Fiscal Eletrônica ${object.l10n_br_numero_nf}</field>
+            <field name="email_from">${(object.user_id.email_formatted or user.email_formatted) | safe}</field>
+            <field name="email_to">${object.l10n_br_nfe_emails}</field>
+            <field name="body_html" type="html">
+                <div style="margin: 0px; padding: 0px;">
+                    <p style="margin: 0px; padding: 0px; font-size: 13px;">
+                        Prezado <strong>${object.partner_id.l10n_br_razao_social}</strong>,
+                        <br/><br/>
+                        Em anexo segue boleto bancário referente à sua nota fiscal eletrônica.
+                        <br/><br/>
+                        <ul>
+                            <li><p>Número: ${object.l10n_br_numero_nf}</p></li>
+                            <li><p>Série: ${object.l10n_br_serie_nf}</p></li>
+                            <li><p>Chave de acesso: ${object.l10n_br_chave_nf}</p></li>
+                        </ul>
+                    </p>
+                </div>
+            </field>
+            <field name="lang">${object.partner_id.lang}</field>
+            <field name="user_signature" eval="True"/>
+        </record>
+
+        <template id="mail_notification_nfe">
+<table border="0" cellpadding="0" cellspacing="0" style="padding-top: 16px; background-color: #F1F1F1; font-family:Verdana, Arial,sans-serif; color: #454748; width: 100%; border-collapse:separate;"><tr><td align="center">
+<table border="0" cellpadding="0" cellspacing="0" width="590" style="padding: 24px; background-color: white; color: #454748; border-collapse:separate;">
+<tbody>
+    <!-- HEADER -->
+    <tr>
+        <td align="center" style="min-width: 590px;">
+            <table border="0" cellpadding="0" cellspacing="0" width="100%" style="background-color: white; padding: 0; border-collapse:separate;">
+                <tr><td valign="middle">
+                    <span style="font-size: 10px;"></span><br/>
+                    <span style="font-size: 20px; font-weight: bold;">
+                        Nota Fiscal Eletrônica (NF-e)
+                    </span>
+                </td><td valign="middle" align="right">
+                    <img t-att-src="'/logo.png?company=%s' % company.id" style="padding: 0px; margin: 0px; height: 48px;" t-att-alt="'%s' % company.name"/>
+                </td></tr>
+                <tr><td colspan="2" style="text-align:center;">
+                  <hr width="100%" style="background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin:4px 0px 32px 0px;"/>
+                </td></tr>
+            </table>
+        </td>
+    </tr>
+    <!-- CONTENT -->
+    <tr>
+        <td style="min-width: 590px;">
+            <t t-raw="message.body"/>
+        </td>
+    </tr>
+    <!-- FOOTER -->
+    <tr>
+        <td align="center" style="min-width: 590px; padding: 0 8px 0 8px; font-size:11px;">
+            <hr width="100%" style="background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 4px 0px;"/>
+            <b t-esc="company.name"/><br/>
+            <div style="color: #999999;">
+                <t t-esc="company.phone"/>
+                <t t-if="company.email"> |
+                    <a t-att-href="'mailto:%s' % company.email" style="text-decoration:none; color: #999999;"><t t-esc="company.email"/></a>
+                </t>
+                <t t-if="company.website"> |
+                    <a t-att-href="'%s' % company.website" style="text-decoration:none; color: #999999;">
+                        <t t-esc="company.website"/>
+                    </a>
+                </t>
+            </div>
+        </td>
+    </tr>
+</tbody>
+</table>
+</td></tr>
+<!-- POWERED BY -->
+<tr><td align="center" style="min-width: 590px;">
+        Powered by <a target="_blank" href="https://www.odoo.com?utm_source=db&amp;utm_medium=email" style="color: #875A7B;">Odoo</a>
+</td></tr>
+</table>
+        </template>
+
+    </data>
+
+</odoo>

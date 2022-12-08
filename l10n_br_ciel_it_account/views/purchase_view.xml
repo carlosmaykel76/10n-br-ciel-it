@@ -1,0 +1,379 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<odoo>
+    <data>
+
+        <record id="purchase_order_unplan_server_action" model="ir.actions.server">
+            <field name="name">Cancelar Pedidos</field>
+            <field name="model_id" ref="purchase.model_purchase_order"/>
+            <field name="binding_model_id" ref="purchase.model_purchase_order" />
+            <field name="binding_view_types">list</field>
+            <field name="state">code</field>
+            <field name="code">records.button_cancel_all()</field>
+        </record>
+    
+        <record id="purchase_order_form_inherit" model="ir.ui.view">
+            <field name="name">purchase.order.form.inherit</field>
+            <field name="model">purchase.order</field>
+            <field name="inherit_id" ref="purchase.purchase_order_form"/>
+            <field name="arch" type="xml">
+                <page name="purchase_delivery_invoice" position="before">
+                    <page name="fiscal" string="Fiscal">
+
+                        <group string="Dados fiscais" name="fiscal_data">
+                            <group>
+                                <field name="company_id" invisible="1"/>
+                                <field name="l10n_br_imposto_auto"/>
+                                <label for="l10n_br_calcular_imposto" string=" Atualizar Impostos" class="fa fa-search oe_edit_only"/>
+                                <field name="l10n_br_calcular_imposto" invisible="1"/>
+                                <field name="l10n_br_cfop_id"/>
+                            </group>
+                            <group colspan="2" col="2">
+                                <separator string="Informação Fiscal" colspan="4"/>
+                                <field name="l10n_br_informacao_fiscal" colspan="3" nolabel="1"/>
+                                <separator string="Informação Complementar" colspan="4"/>
+                                <field name="l10n_br_informacao_complementar" colspan="3" nolabel="1"/>
+                            </group>
+                        </group>
+
+                        <group string="Totais" name="total_fiscal_data">
+                            <group>
+                                <field name="l10n_br_icms_base"/>
+                                <field name="l10n_br_icms_valor"/>
+                                <field name="l10n_br_icms_valor_isento"/>
+                                <field name="l10n_br_icms_valor_outros"/>
+                                <field name="l10n_br_icms_valor_desonerado"/>
+                                <field name="l10n_br_icms_dest_valor"/>
+                                <field name="l10n_br_icms_remet_valor"/>
+                                <field name="l10n_br_fcp_dest_valor"/>
+                                <field name="l10n_br_fcp_st_valor"/>
+                                <field name="l10n_br_fcp_st_ant_valor"/>
+                                <field name="l10n_br_icmsst_base"/>
+                                <field name="l10n_br_icmsst_valor"/>
+                                <field name="l10n_br_icmsst_valor_outros"/>
+                                <field name="l10n_br_prod_valor"/>
+                            </group>
+                            <group>
+                                <field name="l10n_br_frete"/>
+                                <field name="l10n_br_seguro"/>
+                                <field name="l10n_br_despesas_acessorias"/>
+                                <field name="l10n_br_desc_valor"/>
+                                <field name="l10n_br_ipi_valor"/>
+                                <field name="l10n_br_ipi_valor_isento"/>
+                                <field name="l10n_br_ipi_valor_outros"/>
+                                <field name="l10n_br_pis_valor"/>
+                                <field name="l10n_br_pis_valor_isento"/>
+                                <field name="l10n_br_pis_valor_outros"/>
+                                <field name="l10n_br_cofins_valor"/>
+                                <field name="l10n_br_cofins_valor_isento"/>
+                                <field name="l10n_br_cofins_valor_outros"/>
+                                <field name="l10n_br_ii_valor"/>
+                                <field name="l10n_br_ii_valor_aduaneira"/>
+                                <field name="l10n_br_irpj_ret_valor"/>
+                                <field name="l10n_br_inss_ret_valor"/>
+                                <field name="l10n_br_iss_ret_valor"/>
+                                <field name="l10n_br_csll_ret_valor"/>
+                                <field name="l10n_br_pis_ret_valor"/>
+                                <field name="l10n_br_cofins_ret_valor"/>
+                                <field name="l10n_br_total_nfe"/>
+                                <field name="l10n_br_total_tributos"/>
+                            </group>
+                        </group>
+
+                    </page>
+                </page>
+
+                <field name="partner_id" position="before">
+                    <field name="l10n_br_tipo_pedido"/>
+                </field>
+                
+                <field name="incoterm_id" position="replace">
+                </field>
+                <field name="payment_term_id" position="replace">
+                </field>
+
+                <field name="date_order" position="after">
+                    <field name="payment_term_id"/>
+                    <field name="payment_acquirer_id"/>
+                    <field name="incoterm_id"/>
+                    <field name="l10n_br_frete"/>
+                    <label for="l10n_br_calcular_imposto" string=" Atualizar Impostos" class="fa fa-search oe_edit_only"/>
+                    <field name="l10n_br_calcular_imposto" invisible="1"/>
+                </field>
+
+                <field name="amount_tax" position="after">
+                    <field name="l10n_br_desc_valor" widget='monetary' options="{'currency_field': 'currency_id'}"/>
+                </field>
+
+                <xpath expr="//field[@name='order_line']" position="attributes">
+                    <attribute name="context">{'default_l10n_br_imposto_auto': l10n_br_imposto_auto}</attribute>
+                </xpath>
+
+                <xpath expr="//field[@name='order_line']/tree/field[@name='product_qty']" position="before">
+                    <field name="l10n_br_cfop_codigo"/>
+                </xpath>
+
+                <xpath expr="//field[@name='order_line']/tree/field[@name='taxes_id']" position="after">
+                    <field name="l10n_br_icms_aliquota" string="% ICMS" optional="hide"/>
+                    <field name="l10n_br_icms_valor" string="R$ ICMS" optional="hide"/>
+                    <field name="l10n_br_icmsst_mva" string="% MVA ICMSST" optional="hide"/>
+                    <field name="l10n_br_icmsst_aliquota" string="% ICMSST" optional="hide"/>
+                    <field name="l10n_br_icmsst_valor" string="R$ ICMSST"/>
+                    <field name="l10n_br_ipi_aliquota" string="% IPI" optional="hide"/>
+                    <field name="l10n_br_ipi_valor" string="R$ IPI"/>
+                    <field name="l10n_br_pis_aliquota" string="% PIS" optional="hide"/>
+                    <field name="l10n_br_pis_valor" string="R$ PIS" optional="hide"/>
+                    <field name="l10n_br_cofins_aliquota" string="% COFINS" optional="hide"/>
+                    <field name="l10n_br_cofins_valor" string="R$ COFINS" optional="hide"/>
+                    <field name="l10n_br_ii_valor" string="R$ II" optional="hide"/>
+                    <field name="l10n_br_ii_valor_aduaneira" string="R$ ADUANEIRA" optional="hide"/>
+                    <field name="l10n_br_irpj_ret_valor" string="R$ IRPJ (Retido)" optional="hide"/>
+                    <field name="l10n_br_inss_ret_valor" string="R$ INSS (Retido)" optional="hide"/>
+                    <field name="l10n_br_iss_ret_valor" string="R$ ISS (Retido)" optional="hide"/>
+                    <field name="l10n_br_csll_ret_valor" string="R$ CSLL (Retido)" optional="hide"/>
+                    <field name="l10n_br_pis_ret_valor" string="R$ PIS (Retido)" optional="hide"/>
+                    <field name="l10n_br_cofins_ret_valor" string="R$ COFINS (Retido)" optional="hide"/>
+                    <field name="company_id" invisible="1"/>
+                    <field name="l10n_br_di_adicao_id" optional="hide"/>
+                </xpath>
+
+                <xpath expr="//field[@name='order_line']/tree/field[@name='taxes_id']" position="attributes">
+                    <attribute name="optional">hide</attribute>
+                </xpath>
+
+                <xpath expr="//field[@name='order_line']/tree/field[@name='price_subtotal']" position="attributes">
+                    <attribute name="optional">hide</attribute>
+                </xpath>
+
+                <xpath expr="//field[@name='order_line']/tree/field[@name='price_subtotal']" position="after">
+                    <field name="price_total" widget="monetary"/>
+                </xpath>
+
+                <xpath expr="//field[@name='order_line']/form/group/group/field[@name='product_id']" position="before">
+                    <field name="l10n_br_compra_indcom"/>
+                </xpath>    
+
+                <xpath expr="//field[@name='order_line']/form/group/group/field[@name='account_analytic_id']" position="before">
+                    <field name="account_id"/>
+                </xpath>
+
+                <xpath expr="//field[@name='order_line']/form/group/group/field[@name='taxes_id']" position="after">
+                    <field name="l10n_br_frete" force_save="1"/>
+                    <field name="l10n_br_seguro" force_save="1"/>
+                    <field name="l10n_br_despesas_acessorias" force_save="1"/>
+                </xpath>
+
+                <xpath expr="//field[@name='order_line']/form/group/group/field[@name='taxes_id']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+
+                <xpath expr="//field[@name='order_line']/form/group/group[2]/field[@name='analytic_tag_ids']" position="after">
+                    <field name="l10n_br_imposto_auto" invisible="1"/>
+                    <field name="l10n_br_operacao_id" force_save="1"/>
+                    <field name="l10n_br_cfop_id" force_save="1"/>
+                    <field name="l10n_br_informacao_adicional"/>
+                    <field name="qty_available"/>
+                    <field name="virtual_available"/>
+                </xpath>
+
+                <xpath expr="//field[@name='order_line']/tree" position="attributes">
+                    <attribute name="editable"/>
+                </xpath>
+
+                <xpath expr="//field[@name='order_line']/form/group/group[3]/notebook/page[1]" position="before">
+
+                    <page string="Impostos">
+
+                        <group string="Impostos">
+
+                            <field name="l10n_br_imposto_auto" invisible="1"/>
+                            <group string="ICMS" colspan="4">
+                                <group>
+                                    <field name="l10n_br_icms_modalidade_base" string="Modalidade" force_save="1"/>
+                                    <field name="l10n_br_icms_cst" string="CST" force_save="1"/>
+                                    <field name="l10n_br_icms_base" string="Base de Cálculo" force_save="1"/>
+                                    <field name="l10n_br_icms_aliquota" string="Alíquota" force_save="1"/>
+                                    <field name="l10n_br_icms_valor" string="Valor Tributável" force_save="1"/>
+                                </group>
+                                <group>
+                                    <field name="l10n_br_icms_valor_isento" string="Valor Isento" force_save="1"/>
+                                    <field name="l10n_br_icms_valor_outros" string="Valor Outros" force_save="1"/>
+                                    <field name="l10n_br_icms_valor_desonerado" string="Valor Desonerado" force_save="1"/>
+                                    <field name="l10n_br_icms_motivo_desonerado" string="Motivo Desoneração" force_save="1"/>
+                                    <field name="l10n_br_codigo_beneficio" string="Código Benefício" force_save="1"/>
+                                </group>
+                            </group>
+
+                            <group string="DIFAL ICMS">
+                                <field name="l10n_br_icms_dest_base" string="Base de Cálculo" force_save="1"/>
+                                <field name="l10n_br_icms_dest_aliquota" string="Alíquota Destino" force_save="1"/>
+                                <field name="l10n_br_icms_inter_aliquota" string="Alíquota Inter" force_save="1"/>
+                                <field name="l10n_br_icms_inter_participacao" string="Participação" force_save="1"/>
+                                <field name="l10n_br_icms_dest_valor" string="Valor UF Destino" force_save="1"/>
+                                <field name="l10n_br_icms_remet_valor" string="Valor UF Remetente" force_save="1"/>
+                            </group>
+
+                            <group string="ICMS Diferido">
+                                <field name="l10n_br_icms_reducao_base" string="Redução" force_save="1"/>
+                                <field name="l10n_br_icms_diferido_valor_operacao" string="Valor Operação" force_save="1"/>
+                                <field name="l10n_br_icms_diferido_aliquota" string="Alíquota" force_save="1"/>
+                                <field name="l10n_br_icms_diferido_valor" string="Valor" force_save="1"/>
+                            </group>
+
+                            <group string="ICMS ST" colspan="4">
+                                <group>
+                                    <field name="l10n_br_icmsst_modalidade_base" string="Modalidade" force_save="1"/>
+                                    <field name="l10n_br_icmsst_reducao_base" string="Redução" force_save="1"/>
+                                    <field name="l10n_br_icmsst_mva" string="MVA" force_save="1"/>
+                                    <field name="l10n_br_icmsst_base" string="Base de Cálculo" force_save="1"/>
+                                </group>
+                                <group>
+                                    <field name="l10n_br_icmsst_aliquota" string="Alíquota" force_save="1"/>
+                                    <field name="l10n_br_icmsst_valor" string="Valor Tributável" force_save="1"/>
+                                    <field name="l10n_br_icmsst_valor_outros" string="Valor Outros" force_save="1"/>
+                                    <field name="l10n_br_icmsst_base_propria_aliquota" string="Base de Cálculo (Operação Própria)" force_save="1"/>
+                                    <field name="l10n_br_icmsst_uf" string="UF Devido" force_save="1"/>
+                                </group>
+                            </group>
+
+                            <group string="ICMS ST Retido">
+                                <field name="l10n_br_icmsst_retido_base" string="Base de Cálculo" force_save="1"/>
+                                <field name="l10n_br_icmsst_retido_aliquota" string="Alíquota" force_save="1"/>
+                                <field name="l10n_br_icmsst_substituto_valor" string="Valor Substituto" force_save="1"/>
+                                <field name="l10n_br_icmsst_substituto_valor_outros" string="Valor Substituto Outros" force_save="1"/>
+                                <field name="l10n_br_icmsst_retido_valor" string="Valor Retido" force_save="1"/>
+                                <field name="l10n_br_icmsst_retido_valor_outros" string="Valor Retido Outros" force_save="1"/>
+                            </group>
+
+                            <group string="II">
+                                <field name="l10n_br_ii_base" string="Base de Cálculo" force_save="1"/>
+                                <field name="l10n_br_ii_aliquota" string="Alíquota" force_save="1"/>
+                                <field name="l10n_br_ii_valor" string="Valor Tributável" force_save="1"/>
+                                <field name="l10n_br_ii_valor_aduaneira" string="Valor Aduaneira" force_save="1"/>
+                                <field name="company_id" invisible="1"/>
+                                <field name="l10n_br_di_adicao_id" force_save="1"/>
+                            </group>
+
+                            <group string="IPI" colspan="4">
+                                <group>
+                                    <field name="l10n_br_ipi_cst" string="CST" force_save="1"/>
+                                    <field name="l10n_br_ipi_base" string="Base de Cálculo" force_save="1"/>
+                                    <field name="l10n_br_ipi_aliquota" string="Alíquota" force_save="1"/>
+                                    <field name="l10n_br_ipi_valor" string="Valor Tributável" force_save="1"/>
+                                    <field name="l10n_br_ipi_valor_isento" string="Valor Isento" force_save="1"/>
+                                    <field name="l10n_br_ipi_valor_outros" string="Valor Outros" force_save="1"/>
+                                </group>
+                                <group>
+                                    <field name="l10n_br_ipi_cnpj" string="CNPJ Fabricante" force_save="1"/>
+                                    <field name="l10n_br_ipi_selo_codigo" string="Código Selo" force_save="1"/>
+                                    <field name="l10n_br_ipi_selo_quantidade" string="Quantidade Selo" force_save="1"/>
+                                    <field name="l10n_br_ipi_enq" string="Enquadramento" force_save="1"/>
+                                </group>
+                            </group>
+
+                            <group string="PIS">
+                                <field name="l10n_br_pis_cst" string="CST" force_save="1"/>
+                                <field name="l10n_br_pis_base" string="Base de Cálculo" force_save="1"/>
+                                <field name="l10n_br_pis_aliquota" string="Alíquota" force_save="1"/>
+                                <field name="l10n_br_pis_valor" string="Valor Tributável" force_save="1"/>
+                                <field name="l10n_br_pis_valor_isento" string="Valor Isento" force_save="1"/>
+                                <field name="l10n_br_pis_valor_outros" string="Valor Outros" force_save="1"/>
+                            </group>
+
+                            <group string="COFINS">
+                                <field name="l10n_br_cofins_cst" string="CST" force_save="1"/>
+                                <field name="l10n_br_cofins_base" string="Base de Cálculo" force_save="1"/>
+                                <field name="l10n_br_cofins_aliquota" string="Alíquota" force_save="1"/>
+                                <field name="l10n_br_cofins_valor" string="Valor Tributável" force_save="1"/>
+                                <field name="l10n_br_cofins_valor_isento" string="Valor Isento" force_save="1"/>
+                                <field name="l10n_br_cofins_valor_outros" string="Valor Outros" force_save="1"/>
+                            </group>
+
+                            <separator string="Serviços (Retenção)" colspan="4"/>
+
+                            <group string="IRPJ Retido">
+                                <field name="l10n_br_irpj_ret_base" string="Base de Cálculo" force_save="1"/>
+                                <field name="l10n_br_irpj_ret_aliquota" string="Alíquota" force_save="1"/>
+                                <field name="l10n_br_irpj_ret_valor" string="Valor" force_save="1"/>
+                            </group>
+
+                            <group string="INSS Retido">
+                                <field name="l10n_br_inss_ret_base" string="Base de Cálculo" force_save="1"/>
+                                <field name="l10n_br_inss_ret_aliquota" string="Alíquota" force_save="1"/>
+                                <field name="l10n_br_inss_ret_valor" string="Valor" force_save="1"/>
+                            </group>
+
+                            <group string="ISS Retido">
+                                <field name="l10n_br_iss_ret_base" string="Base de Cálculo" force_save="1"/>
+                                <field name="l10n_br_iss_ret_aliquota" string="Alíquota" force_save="1"/>
+                                <field name="l10n_br_iss_ret_valor" string="Valor" force_save="1"/>
+                            </group>
+
+                            <group string="CSLL Retido">
+                                <field name="l10n_br_csll_ret_base" string="Base de Cálculo" force_save="1"/>
+                                <field name="l10n_br_csll_ret_aliquota" string="Alíquota" force_save="1"/>
+                                <field name="l10n_br_csll_ret_valor" string="Valor" force_save="1"/>
+                            </group>
+
+                            <group string="PIS Retido">
+                                <field name="l10n_br_pis_ret_base" string="Base de Cálculo" force_save="1"/>
+                                <field name="l10n_br_pis_ret_aliquota" string="Alíquota" force_save="1"/>
+                                <field name="l10n_br_pis_ret_valor" string="Valor" force_save="1"/>
+                            </group>
+
+                            <group string="COFINS Retido">
+                                <field name="l10n_br_cofins_ret_base" string="Base de Cálculo" force_save="1"/>
+                                <field name="l10n_br_cofins_ret_aliquota" string="Alíquota" force_save="1"/>
+                                <field name="l10n_br_cofins_ret_valor" string="Valor" force_save="1"/>
+                            </group>
+
+                            <separator string="FCP" colspan="4"/>
+
+                            <group string="ICMS">
+                                <field name="l10n_br_fcp_base" string="Base de Cálculo" force_save="1"/>
+                                <field name="l10n_br_fcp_dest_aliquota" string="Alíquota" force_save="1"/>
+                                <field name="l10n_br_fcp_dest_valor" string="Valor" force_save="1"/>
+                            </group>
+
+                            <group string="ICMS ST Retido">
+                                <field name="l10n_br_fcp_st_base" string="Base de Cálculo" force_save="1"/>
+                                <field name="l10n_br_fcp_st_aliquota" string="Alíquota" force_save="1"/>
+                                <field name="l10n_br_fcp_st_valor" string="Valor" force_save="1"/>
+                            </group>
+
+                            <group string="ICMS ST Retido Ant.">
+                                <field name="l10n_br_fcp_st_ant_base" string="Base de Cálculo" force_save="1"/>
+                                <field name="l10n_br_fcp_st_ant_aliquota" string="Alíquota" force_save="1"/>
+                                <field name="l10n_br_fcp_st_ant_valor" string="Valor" force_save="1"/>
+                            </group>
+
+                            <separator string="Simples Nacional" colspan="4"/>
+
+                            <group string="ICMS Crédito Aplicável">
+                                <field name="l10n_br_icms_credito_aliquota" string="Alíquota" force_save="1"/>
+                                <field name="l10n_br_icms_credito_valor" string="Valor" force_save="1"/>
+                            </group>
+
+                        </group>
+
+                    </page>
+
+                </xpath>
+
+            </field>
+        </record>
+
+        <record id="view_l10n_br_operacao_form_inherit" model="ir.ui.view">
+            <field name="name">operacao.form.inherit</field>
+            <field name="model">l10n_br_ciel_it_account.operacao</field>
+            <field name="inherit_id" ref="view_l10n_br_operacao_form"/>
+            <field name="arch" type="xml">
+
+                <field name="l10n_br_tipo_pedido" position="after">
+                    <field name="l10n_br_tipo_pedido_entrada"/>
+                </field>
+
+            </field>
+        </record>
+
+    </data>
+</odoo>

@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="view_country_form_inherit" model="ir.ui.view">
+            <field name="name">res.country.form.inherit</field>
+            <field name="model">res.country</field>
+            <field name="inherit_id" ref="base.view_country_form"/>
+            <field name="arch" type="xml">
+
+                <xpath expr=".//field[@name='code']" position="after">
+                    <field name="l10n_br_codigo_bacen"/>
+                </xpath>
+
+            </field>
+        </record>
+
+        <record id="view_country_state_form_inherit" model="ir.ui.view">
+            <field name="name">res.country.state.form.inherit</field>
+            <field name="model">res.country.state</field>
+            <field name="inherit_id" ref="base.view_country_state_form"/>
+            <field name="arch" type="xml">
+
+                <xpath expr=".//field[@name='code']" position="after">
+                    <field name="l10n_br_codigo_ibge"/>
+                    <field name="l10n_br_fcp_aliquota"/>
+                </xpath>
+
+            </field>
+        </record>
+
+        <record id="view_l10n_br_municipio_tree" model="ir.ui.view">
+            <field name="name">res.municipio.tree</field>
+            <field name="model">l10n_br_ciel_it_account.res.municipio</field>
+            <field name="arch" type="xml">
+                <tree string="Município" editable="bottom">
+                    <field name="name"/>
+                    <field name="codigo_ibge"/>
+                    <field name="country_id" options="{'no_create': True}"/>
+                    <field name="state_id" options="{'no_create': True}"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_l10n_br_municipio_form" model="ir.ui.view">
+            <field name="name">res.municipio.form</field>
+            <field name="model">l10n_br_ciel_it_account.res.municipio</field>
+            <field name="arch" type="xml">
+                <form string="Município">
+                    <sheet>
+                        <group>
+                            <field name="name"/>
+                            <field name="codigo_ibge"/>
+                            <field name="country_id" options="{'no_create': True}"/>
+                            <field name="state_id" options="{'no_create': True}"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_l10n_br_municipio" model="ir.actions.act_window">
+            <field name="name">Municípios</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">l10n_br_ciel_it_account.res.municipio</field>
+            <field name="view_id" ref="view_l10n_br_municipio_tree"/>
+        </record>
+
+        <menuitem id="menu_l10n_br_municipio" action="l10n_br_ciel_it_account.action_l10n_br_municipio" parent="contacts.menu_localisation" sequence="2"/>
+
+    </data>
+</odoo>

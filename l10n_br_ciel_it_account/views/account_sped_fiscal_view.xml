@@ -1,0 +1,157 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<odoo>
+    <data>
+
+        <record id="view_account_sped_fiscal_tree" model="ir.ui.view">
+            <field name="name">sped.fiscal.tree</field>
+            <field name="model">l10n_br_ciel_it_account.sped.fiscal</field>
+            <field name="arch" type="xml">
+                <tree string="Sped Fiscal">
+                    <field name="name"/>
+                    <field name="date_ini"/>
+                    <field name="date_fim"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_account_sped_fiscal_form" model="ir.ui.view">
+            <field name="name">sped.fiscal.form</field>
+            <field name="model">l10n_br_ciel_it_account.sped.fiscal</field>
+            <field name="arch" type="xml">
+                <form string="Export File">
+
+                    <header>
+
+                        <button name="gerar_sped" string="GERAR" type="object" class="btn-primary" attrs="{'invisible': [('arquivo_sped', '!=', False)]}"/>
+
+                    </header>
+                    <sheet>
+
+                        <notebook>
+                            <page string="Principal">
+                                <group>
+                                    <group>
+                                        <field name="date_ini" string="Data Inicial"/>
+                                        <field name="date_fim" string="Data Final"/>
+                                        <field name="name" force_save="1"/>
+                                        <field name="arquivo_sped" widget="binary" filename="arquivo_sped_fname" attrs="{'readonly': True}" force_save="1"/>
+                                    </group>
+                                </group>
+                            </page>
+                            <page string="E110 - ICMS">
+                                <group>
+                                    <group>
+                                        <field name="e110_vl_tot_debitos" force_save="1"/>
+                                        <field name="e110_vl_aj_debitos" force_save="1"/>
+                                        <field name="e110_vl_tot_aj_debitos" force_save="1"/>
+                                        <field name="e110_vl_estornos_cred" force_save="1"/>
+                                        <field name="e110_vl_tot_creditos" force_save="1"/>
+                                        <field name="e110_vl_aj_creditos" force_save="1"/>
+                                        <field name="e110_vl_tot_aj_creditos" force_save="1"/>
+                                    </group>
+                                    <group>
+                                        <field name="e110_vl_estornos_deb" force_save="1"/>
+                                        <field name="e110_vl_sld_credor_ant" force_save="1"/>
+                                        <field name="e110_vl_sld_apurado" force_save="1"/>
+                                        <field name="e110_vl_tot_ded" force_save="1"/>
+                                        <field name="e110_vl_icms_recolher" force_save="1"/>
+                                        <field name="e110_vl_sld_credor_transportar" force_save="1"/>
+                                        <field name="e110_deb_esp" force_save="1"/>
+                                    </group>
+                                </group>
+                            </page>
+                            <page string="E520 - IPI">
+                                <group>
+                                    <group>
+                                        <field name="e520_vl_sd_ant_ipi" force_save="1"/>
+                                        <field name="e520_vl_deb_ipi" force_save="1"/>
+                                        <field name="e520_vl_cred_ipi" force_save="1"/>
+                                        <field name="e520_vl_od_ipi" force_save="1"/>
+                                        <field name="e520_vl_oc_ipi" force_save="1"/>
+                                        <field name="e520_vl_sc_ipi" force_save="1"/>
+                                        <field name="e520_vl_sd_ipi" force_save="1"/>
+                                    </group>
+                                </group>
+                            </page>
+                            <page string="H005 - INVENTARIO FISICO">
+                                <group>
+                                    <group>
+                                        <field name="h005_vl_inv" force_save="1"/>
+                                    </group>
+                                </group>
+                            </page>
+                            <page string="E210 - ICMSST">
+                                <field name="line_icmsst_ids" mode="tree">
+                                    <tree>
+                                        <field name="state_id"/>
+
+                                        <field name="e210_vl_sld_cred_ant_st"/>
+                                        <field name="e210_vl_devol_st"/>
+                                        <field name="e210_vl_ressarc_st"/>
+                                        <field name="e210_vl_out_cred_st"/>
+                                        <field name="e210_vl_aj_creditos_st"/>
+                                        <field name="e210_vl_retencao_st"/>
+                                        <field name="e210_vl_out_deb_st"/>
+                                        <field name="e210_vl_aj_debitos_st"/>
+                                        <field name="e210_vl_sld_dev_ant_st"/>
+                                        <field name="e210_vl_deducoes_st"/>
+                                        <field name="e210_vl_icms_recol_st"/>
+                                        <field name="e210_vl_sld_cred_st_transportar"/>
+                                        <field name="e210_deb_esp_st"/>
+                                    </tree>
+                                </field>
+                            </page>
+                            <page string="E310 - DIFAL">
+                                <field name="line_difalfcp_ids" mode="tree">
+                                    <tree>
+                                        <field name="state_id"/>
+
+                                        <field name="e310_vl_sld_cred_ant_difal"/>
+                                        <field name="e310_vl_tot_debitos_difal"/>
+                                        <field name="e310_vl_out_deb_difal"/>
+                                        <field name="e310_vl_tot_creditos_difal"/>
+                                        <field name="e310_vl_out_cred_difal"/>
+                                        <field name="e310_vl_sld_dev_ant_difal"/>
+                                        <field name="e310_vl_deducoes_difal"/>
+                                        <field name="e310_vl_recol_difal"/>
+                                        <field name="e310_vl_sld_cred_transportar_difal"/>
+                                        <field name="e310_deb_esp_difal"/>
+                                    </tree>
+                                </field>
+                            </page>
+                            <page string="E310 - FCP">
+                                <field name="line_difalfcp_ids" mode="tree">
+                                    <tree>
+                                        <field name="state_id"/>
+
+                                        <field name="e310_vl_sld_cred_ant_fcp"/>
+                                        <field name="e310_vl_tot_deb_fcp"/>
+                                        <field name="e310_vl_out_deb_fcp"/>
+                                        <field name="e310_vl_tot_cred_fcp"/>
+                                        <field name="e310_vl_out_cred_fcp"/>
+                                        <field name="e310_vl_sld_dev_ant_fcp"/>
+                                        <field name="e310_vl_deducoes_fcp"/>
+                                        <field name="e310_vl_recol_fcp"/>
+                                        <field name="e310_vl_sld_cred_transportar_fcp"/>
+                                        <field name="e310_deb_esp_fcp"/>
+                                    </tree>
+                                </field>
+                            </page>
+                        </notebook>
+
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_account_sped_fiscal" model="ir.actions.act_window">
+            <field name="name">Sped Fiscal</field>
+            <field name="res_model">l10n_br_ciel_it_account.sped.fiscal</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="view_id" ref="view_account_sped_fiscal_tree"/>
+        </record>
+
+        <menuitem id="menu_account_sped_fiscal" name="Sped Fiscal (ICMS/IPI)" action="action_account_sped_fiscal" parent="l10n_br_ciel_it_account.account_reports_brasil_reports_menu" sequence="210"/>
+
+    </data>
+</odoo>

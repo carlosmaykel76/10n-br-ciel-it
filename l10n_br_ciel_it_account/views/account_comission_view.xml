@@ -1,0 +1,203 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<odoo>
+    <data>
+
+        <menuitem id="menu_finance_entries_comissao" name="Comissão" parent="account.menu_finance_entries" sequence="20" groups="account.group_account_invoice"/>
+        <menuitem id="menu_finance_configuration_comissao" name="Comissão" parent="account.menu_finance_configuration" sequence="20" groups="account.group_account_invoice"/>
+        <menuitem id="menu_finance_reports_comissao" name="Comissão" parent="account.menu_finance_reports" sequence="20" groups="account.group_account_invoice"/>
+
+        <record id="view_l10n_br_account_comissao_line_tree" model="ir.ui.view">
+            <field name="name">comissao.line.tree</field>
+            <field name="model">l10n_br_ciel_it_account.comissao.line</field>
+            <field name="arch" type="xml">
+                <tree create="false" string="Relatório de Comissão">
+                    <field name="comissao_id" optional="show"/>
+                    <field name="manager_id" optional="hide"/>
+                    <field name="salesrep_id" optional="show"/>
+                    <field name="move_id" optional="show"/>
+                    <field name="partner_id" optional="show"/>
+                    <field name="payment_id" optional="show"/>
+                    <field name="data_base" optional="show"/>
+                    <field name="valor_base" optional="show"/>
+                    <field name="comissao_manager" optional="hide"/>
+                    <field name="valor_comissao_manager" optional="hide"/>
+                    <field name="comissao_salesrep" optional="show"/>
+                    <field name="valor_comissao_salesrep" optional="show"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_l10n_br_account_comissao_line_search" model="ir.ui.view">
+            <field name="name">comissao.line.search</field>
+            <field name="model">l10n_br_ciel_it_account.comissao.line</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name="comissao_id" />
+                    <field name="manager_id" />
+                    <field name="salesrep_id"/>
+                    <group expand="0" string="Group By">
+                        <filter
+                            name="group_comissao_id"
+                            string="Cálculo"
+                            domain="[]"
+                            context="{'group_by':'comissao_id'}"
+                        />
+                        <filter
+                            name="group_manager_id"
+                            string="Gerente"
+                            domain="[]"
+                            context="{'group_by':'manager_id'}"
+                        />
+                        <filter
+                            name="group_salesrep_id"
+                            string="Vendedor"
+                            domain="[]"
+                            context="{'group_by':'salesrep_id'}"
+                        />
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <record id="action_l10n_br_account_comissao_line" model="ir.actions.act_window">
+            <field name="name">Relatório de Comissão</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">l10n_br_ciel_it_account.comissao.line</field>
+            <field name="view_id" ref="view_l10n_br_account_comissao_line_tree"/>
+        </record>
+
+        <menuitem id="menu_l10n_br_account_comissao_line" action="l10n_br_ciel_it_account.action_l10n_br_account_comissao_line" parent="l10n_br_ciel_it_account.menu_finance_reports_comissao" sequence="210"/>
+
+        <record id="view_l10n_br_account_comissao_tree" model="ir.ui.view">
+            <field name="name">comissao.tree</field>
+            <field name="model">l10n_br_ciel_it_account.comissao</field>
+            <field name="arch" type="xml">
+                <tree string="Cálculo de Comissão">
+                    <field name="name"/>
+                    <field name="date_start"/>
+                    <field name="date_end"/>
+                    <field name="state"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_l10n_br_account_comissao_form" model="ir.ui.view">
+            <field name="name">comissao.form</field>
+            <field name="model">l10n_br_ciel_it_account.comissao</field>
+            <field name="arch" type="xml">
+                <form string="Cálculo de Comissão">
+                    <header>
+                        <field name="state" widget="statusbar"/>
+                        <button name="calcular_comissao" id="calcular_comissao_btn" type="object" class="oe_highlight" string="Cálcular Comissão" groups="account.group_account_invoice" attrs="{'invisible': [('state', 'not in', ['rascunho','calculado'])]}"/>
+                        <button name="aprovar_comissao" id="aprovar_comissao_btn" type="object" class="oe_highlight" string="Aprovar Comissão" groups="account.group_account_invoice" attrs="{'invisible': [('state', '!=', 'calculado')]}"/>
+                        <button name="pagar_comissao" id="pagar_comissao_btn" type="object" class="oe_highlight" string="Pagar Comissão" groups="account.group_account_invoice" attrs="{'invisible': [('state', '!=', 'aprovado')]}"/>
+                    </header>
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="name" force_save="1"/>
+                                <field name="date_start" force_save="1"/>
+                                <field name="date_end" force_save="1"/>
+                                <field name="calcular_salesrep" force_save="1"/>
+                                <field name="calcular_manager" force_save="1"/>
+                            </group>
+                            <group>
+                                <field name="user_calculo_id" force_save="1"/>
+                                <field name="date_calculo" force_save="1"/>
+                                <field name="user_aprovado_id" force_save="1"/>
+                                <field name="date_aprovado" force_save="1"/>
+                                <field name="user_pago_id" force_save="1"/>
+                                <field name="date_pago" force_save="1"/>
+                            </group>
+                        </group>
+
+                        <notebook>
+                            <page string="Linhas de Comissão">
+
+                                <field name="lines_ids" mode="tree">
+
+                                    <tree string="Linhas de Comissão">
+
+                                        <field name="manager_id" optional="show"/>
+                                        <field name="salesrep_id" optional="show"/>
+                                        <field name="move_id" optional="show"/>
+                                        <field name="payment_id" optional="show"/>
+                                        <field name="data_base" optional="show"/>
+                                        <field name="valor_base" optional="show"/>
+                                        <field name="comissao_manager" optional="show"/>
+                                        <field name="valor_comissao_manager" optional="show"/>
+                                        <field name="comissao_salesrep" optional="show"/>
+                                        <field name="valor_comissao_salesrep" optional="show"/>
+
+                                    </tree>
+
+                                </field>
+
+                            </page>
+                        </notebook>
+
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_l10n_br_account_comissao" model="ir.actions.act_window">
+            <field name="name">Cálculo de Comissão</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">l10n_br_ciel_it_account.comissao</field>
+            <field name="view_id" ref="view_l10n_br_account_comissao_tree"/>
+        </record>
+
+        <menuitem id="menu_l10n_br_account_comissao" action="l10n_br_ciel_it_account.action_l10n_br_account_comissao" parent="l10n_br_ciel_it_account.menu_finance_entries_comissao" sequence="200"/>
+
+        <record id="view_l10n_br_account_comissao_regras_tree" model="ir.ui.view">
+            <field name="name">comissao.regras.tree</field>
+            <field name="model">l10n_br_ciel_it_account.comissao.regras</field>
+            <field name="arch" type="xml">
+                <tree string="Regras de Comissão">
+                    <field name="salesrep_ids"/>
+                    <field name="team_ids"/>
+                    <field name="manager_ids"/>
+                    <field name="partner_ids"/>
+                    <field name="date_start"/>
+                    <field name="date_end"/>
+                    <field name="comissao_manager"/>
+                    <field name="comissao_salesrep"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_l10n_br_account_comissao_regras_form" model="ir.ui.view">
+            <field name="name">comissao.regras.form</field>
+            <field name="model">l10n_br_ciel_it_account.comissao.regras</field>
+            <field name="arch" type="xml">
+                <form string="Regras de Comissão">
+                    <sheet>
+
+                        <group>
+                            <field name="salesrep_ids" widget="many2many_tags"/>
+                            <field name="team_ids" widget="many2many_tags"/>
+                            <field name="manager_ids" widget="many2many_tags"/>
+                            <field name="partner_ids" widget="many2many_tags"/>
+                            <field name="date_start"/>
+                            <field name="date_end"/>
+                            <field name="comissao_manager"/>
+                            <field name="comissao_salesrep"/>
+                        </group>
+
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_l10n_br_account_comissao_regras" model="ir.actions.act_window">
+            <field name="name">Regras de Comissão</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">l10n_br_ciel_it_account.comissao.regras</field>
+            <field name="view_id" ref="view_l10n_br_account_comissao_regras_tree"/>
+        </record>
+
+        <menuitem id="menu_l10n_br_account_comissao_regras" action="l10n_br_ciel_it_account.action_l10n_br_account_comissao_regras" parent="l10n_br_ciel_it_account.menu_finance_configuration_comissao" sequence="220"/>
+
+    </data>
+</odoo>

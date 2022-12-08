@@ -1,0 +1,1730 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<odoo>
+    <data>
+
+        <record id="view_account_pagamento_boleto_form" model="ir.ui.view">
+            <field name="name">Registrar Pagamento</field>
+            <field name="model">l10n_br_ciel_it_account.pagamento.boleto</field>
+            <field name="arch" type="xml">
+            <form string="Registrar Pagamento">
+                <group>
+                    <legend>Registrar Pagamento</legend>
+                    <group>
+                        <field name="l10n_br_valor"/>
+                        <field name="l10n_br_juros"/>
+                        <field name="l10n_br_total"/>
+                    </group>
+                </group>
+
+                <footer>
+                    <button name="registrar_pagamento" type="object" string="REGISTRAR" class="oe_highlight"/>
+                            OU
+                    <button special="cancel" string="CANCELAR"/>
+                </footer>
+            </form>
+            </field>
+        </record>
+
+        <record id="action_pagamento_boleto_cancel" model="ir.actions.act_window">
+            <field name="name">Registrar Pagamento</field>
+            <field name="res_model">l10n_br_ciel_it_account.pagamento.boleto</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="view_account_pagamento_boleto_form"/>
+            <field name="target">new</field>
+        </record>
+
+        <record id="action_account_move_email_nfe" model="ir.actions.server">
+            <field name="name">Email NF-e</field>
+            <field name="model_id" ref="account.model_account_move"/>
+            <field name="binding_model_id" ref="account.model_account_move"/>
+            <field name="binding_view_types">list</field>
+            <field name="state">code</field>
+            <field name="code">
+                records.action_nfe_sent_all()
+            </field>
+        </record>
+
+        <record id="action_account_move_gerar_boleto_nfe" model="ir.actions.server">
+            <field name="name">Gerar PDF Boleto</field>
+            <field name="model_id" ref="account.model_account_move"/>
+            <field name="binding_model_id" ref="account.model_account_move"/>
+            <field name="binding_view_types">form</field>
+            <field name="state">code</field>
+            <field name="code">
+                records.action_boleto_nfe_imprimir(force_download_pdf = True)
+            </field>
+        </record>
+
+        <record id="action_account_move_gerar_danfe_nfe" model="ir.actions.server">
+            <field name="name">Gerar XML/DANFE NF-e</field>
+            <field name="model_id" ref="account.model_account_move"/>
+            <field name="binding_model_id" ref="account.model_account_move"/>
+            <field name="binding_view_types">form</field>
+            <field name="state">code</field>
+            <field name="code">
+                records.action_gerar_xmldanfe_nfe()
+            </field>
+        </record>
+
+        <record id="action_account_move_gerar_rps_nfse" model="ir.actions.server">
+            <field name="name">Gerar XML/RPS NFS-e</field>
+            <field name="model_id" ref="account.model_account_move"/>
+            <field name="binding_model_id" ref="account.model_account_move"/>
+            <field name="binding_view_types">form</field>
+            <field name="state">code</field>
+            <field name="code">
+                records.action_gerar_xmlrps_nfse()
+            </field>
+        </record>
+
+        <record id="action_account_move_gerar_danfe_mdfe" model="ir.actions.server">
+            <field name="name">Gerar XML/DANFE MDF-e</field>
+            <field name="model_id" ref="l10n_br_ciel_it_account.model_l10n_br_ciel_it_account_mdfe"/>
+            <field name="binding_model_id" ref="l10n_br_ciel_it_account.model_l10n_br_ciel_it_account_mdfe"/>
+            <field name="binding_view_types">form</field>
+            <field name="state">code</field>
+            <field name="code">
+                records.action_gerar_xmldanfe_mdfe()
+            </field>
+        </record>
+
+        <record id="action_account_move_atualizar_impostos" model="ir.actions.server">
+            <field name="name">Atualizar Impostos</field>
+            <field name="model_id" ref="account.model_account_move"/>
+            <field name="binding_model_id" ref="account.model_account_move"/>
+            <field name="binding_view_types">form</field>
+            <field name="state">code</field>
+            <field name="code">
+                records.onchange_l10n_br_calcular_imposto()
+            </field>
+        </record>
+
+        <record id="action_account_move_parse_xml" model="ir.actions.server">
+            <field name="name">Parse XML</field>
+            <field name="model_id" ref="account.model_account_move"/>
+            <field name="binding_model_id" ref="account.model_account_move"/>
+            <field name="binding_view_types">form</field>
+            <field name="state">code</field>
+            <field name="code">
+                records.action_parse_xml_nfe()
+            </field>
+        </record>
+
+        <record id="action_account_move_voltar_rascunho" model="ir.actions.server">
+            <field name="name">Voltar para Provisório</field>
+            <field name="model_id" ref="account.model_account_move"/>
+            <field name="binding_model_id" ref="account.model_account_move"/>
+            <field name="binding_view_types">form</field>
+            <field name="state">code</field>
+            <field name="code">
+                records._set_provisorio()
+            </field>
+        </record>
+
+        <record id="view_account_move_cce_form" model="ir.ui.view">
+            <field name="name">Carta de Correção Nota Fiscal</field>
+            <field name="model">l10n_br_ciel_it_account.account.move.cce</field>
+            <field name="arch" type="xml">
+            <form string="Carta de Correção Nota Fiscal">
+                <group>
+                    <legend>Carta de Correção Nota Fiscal</legend>
+                    <group>
+                        <field name="l10n_br_correcao"/>
+                    </group>
+                </group>
+
+                <footer>
+                    <button name="do_cce_nfe" type="object" string="CONFIRMAR" class="oe_highlight"/>
+                            OU
+                    <button special="cancel" string="Cancelar"/>
+                </footer>
+            </form>
+            </field>
+        </record>
+
+        <record id="action_account_move_cce" model="ir.actions.act_window">
+            <field name="name">Carta de Correção Nota Fiscal</field>
+            <field name="res_model">l10n_br_ciel_it_account.account.move.cce</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="view_account_move_cce_form"/>
+            <field name="target">new</field>
+        </record>
+
+        <record id="view_account_move_cancel_form" model="ir.ui.view">
+            <field name="name">Cancelar Nota Fiscal</field>
+            <field name="model">l10n_br_ciel_it_account.account.move.cancel</field>
+            <field name="arch" type="xml">
+            <form string="Cancelar Nota Fiscal">
+                <group>
+                    <legend>Cancelar Nota Fiscal</legend>
+                    <group>
+                        <field name="l10n_br_motivo"/>
+                    </group>
+                </group>
+
+                <footer>
+                    <button name="do_cancelar_nfe" type="object" string="CONFIRMAR" class="oe_highlight"/>
+                            OU
+                    <button special="cancel" string="CANCELAR"/>
+                </footer>
+            </form>
+            </field>
+        </record>
+
+        <record id="action_account_move_cancel" model="ir.actions.act_window">
+            <field name="name">Cancelar Nota Fiscal</field>
+            <field name="res_model">l10n_br_ciel_it_account.account.move.cancel</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="view_account_move_cancel_form"/>
+            <field name="target">new</field>
+        </record>
+
+        <record id="view_account_journal_form_inherit" model="ir.ui.view">
+            <field name="name">account.journal.form.inherit</field>
+            <field name="model">account.journal</field>
+            <field name="inherit_id" ref="account.view_account_journal_form"/>
+            <field name="arch" type="xml">
+                <field name="restrict_mode_hash_table" position="after">
+                    <field name="writeoff_account_id"/>
+                    <field name="l10n_br_no_payment"/>
+                    <field name="fiscal_position_id"/>
+                    <field name="l10n_br_tipo_pedido"  attrs="{'invisible': [('l10n_br_no_payment', '=', False)]}"/>
+                    <field name="l10n_br_tipo_pedido_entrada"  attrs="{'invisible': [('l10n_br_no_payment', '=', False)]}"/>
+                    <field name="account_no_payment_id"  attrs="{'invisible': [('l10n_br_no_payment', '=', False)]}"/>
+                </field>
+            </field>
+        </record>
+
+        <record id="view_invoice_tree_inherit" model="ir.ui.view">
+            <field name="name">account.move.tree.inherit</field>
+            <field name="model">account.move</field>
+            <field name="inherit_id" ref="account.view_invoice_tree"/>
+            <field name="arch" type="xml">
+                <field name="name" position="after">
+                    <field name="l10n_br_numero_nf" optional="show"/>
+                    <field name="l10n_br_serie_nf" optional="hide"/>
+                    <field name="l10n_br_chave_nf" optional="hide"/>
+                </field>
+                <field name="state" position="before">
+                    <field name="l10n_br_cstat_nf" optional="hide"/>
+                    <field name="l10n_br_situacao_nf" optional="hide"/>
+                </field>
+            </field>
+        </record>
+
+        <record id="view_account_invoice_filter_inherit" model="ir.ui.view">
+            <field name="name">invoice.filter.inherit</field>
+            <field name="model">account.move</field>
+            <field name="inherit_id" ref="account.view_account_invoice_filter"/>
+            <field name="arch" type="xml">
+                <xpath expr="//search" position="inside">
+                    <field name="l10n_br_numero_nf"/>
+                    <field name="l10n_br_chave_nf"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="view_move_form_inherit" model="ir.ui.view">
+            <field name="name">account.move.form.inherit</field>
+            <field name="model">account.move</field>
+            <field name="inherit_id" ref="account.view_move_form"/>
+            <field name="arch" type="xml">
+
+
+                <button name="action_invoice_sent" position="replace">
+
+                    <field name="type" invisible="1"/>
+                    <field name="l10n_br_correcao" invisible="1"/>
+                    <field name="l10n_br_situacao_nf" invisible="1"/>
+                    <field name="l10n_br_chave_nf" invisible="1"/>
+                    <field name="l10n_br_compra_indcom" invisible="1"/>
+                    <field name="l10n_br_imposto_auto" invisible="1"/>
+
+                    <button name="action_gerar_nfe" id="action_gerar_nfe_btn" type="object" class="oe_highlight" string="Transmitir NF-e" groups="account.group_account_invoice" attrs="{'invisible': ['|',('type', '=', 'entry'),'|',('state', '=', 'draft'),'|',('l10n_br_tipo_documento', '!=', '55'),'&amp;',('l10n_br_situacao_nf', '!=', 'rascunho'),('l10n_br_situacao_nf', '!=', 'excecao_autorizado')]}"/>
+                    <button name="action_resolver_nfe" id="action_resolver_nfe_btn" type="object" class="oe_highlight" string="Resolver NF-e" groups="account.group_account_invoice" attrs="{'invisible': ['|','|','|',('type', '=', 'entry'),('l10n_br_chave_nf', '=', False),('l10n_br_tipo_documento', '!=', '55'),'&amp;',('l10n_br_situacao_nf', '!=', 'excecao_cancelado'),('l10n_br_situacao_nf', '!=', 'excecao_autorizado')]}"/>
+
+                    <button name="action_previsualizar_danfe_nfe" id="action_previsualizar_danfe_nfe_btn" type="object" class="oe_highlight" string="Pré Visualizar Danfe NF-e" groups="account.group_account_invoice" attrs="{'invisible': ['|',('type', '=', 'entry'),'|',('state', '=', 'draft'),'|',('l10n_br_tipo_documento', '!=', '55'),'&amp;',('l10n_br_situacao_nf', '!=', 'rascunho'),('l10n_br_situacao_nf', '!=', 'excecao_autorizado')]}"/>
+                    <button name="action_previsualizar_xml_nfe" id="action_previsualizar_danfe_nfe_btn" type="object" class="oe_highlight" string="Pré Visualizar XML NF-e" groups="account.group_account_invoice" attrs="{'invisible': ['|',('type', '=', 'entry'),'|',('state', '=', 'draft'),'|',('l10n_br_tipo_documento', '!=', '55'),'&amp;',('l10n_br_situacao_nf', '!=', 'rascunho'),('l10n_br_situacao_nf', '!=', 'excecao_autorizado')]}"/>
+
+                    <button name="%(action_account_move_cancel)d" string="Cancelar NF-e" type="action" class="btn-primary" attrs="{'invisible': ['|',('type', '=', 'entry'),'|',('state', '=', 'draft'),'|',('l10n_br_tipo_documento', '!=', '55'),'&amp;',('l10n_br_situacao_nf', '!=', 'cce'),'&amp;',('l10n_br_situacao_nf', '!=', 'autorizado'),('l10n_br_situacao_nf', '!=', 'excecao_cancelado')]}"/>
+                    <button name="%(action_account_move_cce)d" string="Carta Correção NF-e" type="action" class="btn-primary" context="{'default_l10n_br_correcao': l10n_br_correcao}" attrs="{'invisible': ['|',('type', '=', 'entry'),'|',('state', '=', 'draft'),'|',('l10n_br_tipo_documento', '!=', '55'),'&amp;',('l10n_br_situacao_nf', '!=', 'cce'),'&amp;',('l10n_br_situacao_nf', '!=', 'autorizado'),('l10n_br_situacao_nf', '!=', 'excecao_cce')]}"/>
+
+                    <button name="action_nfe_sent" id="action_nfe_sent_btn" type="object" class="oe_highlight" string="Email NF-e" groups="account.group_account_invoice" attrs="{'invisible': ['&amp;','&amp;','|','|','|',('type', '=', 'entry'),('state', '=', 'draft'),('l10n_br_tipo_documento', '!=', '55'),('l10n_br_situacao_nf', '!=', 'cce'),('l10n_br_situacao_nf', '!=', 'autorizado'),('l10n_br_situacao_nf', '!=', 'cancelado')]}"/>
+                    <button name="action_boleto_sent" id="action_boleto_sent_btn" type="object" class="oe_highlight" string="Email Boleto" groups="account.group_account_invoice" attrs="{'invisible': ['&amp;','&amp;','|','|','|',('type', '=', 'entry'),('state', '=', 'draft'),('l10n_br_tipo_documento', '!=', '55'),('l10n_br_situacao_nf', '!=', 'cce'),('l10n_br_situacao_nf', '!=', 'autorizado'),('l10n_br_situacao_nf', '!=', 'cancelado')]}"/>
+
+                    <button name="action_gerar_nfse" id="action_gerar_nfse_btn" type="object" class="oe_highlight" string="Transmitir NFS-e" groups="account.group_account_invoice" attrs="{'invisible': ['|',('type', '=', 'entry'),'|',('state', '=', 'draft'),'|',('l10n_br_tipo_documento', '!=', 'NFSE'),'&amp;',('l10n_br_situacao_nf', '!=', 'rascunho'),('l10n_br_situacao_nf', '!=', 'excecao_autorizado')]}"/>
+
+                    <button name="action_gerar_boleto_nfe" id="action_gerar_boleto_nfe_btn" type="object" class="oe_highlight" string="Gerar Boletos" groups="account.group_account_invoice" attrs="{'invisible': ['|','|',('type', '=', 'entry'),('state', '=', 'draft'),('l10n_br_situacao_nf', '=', 'cancelado')]}"/>
+                    <!--
+                    <button name="action_boleto_nfe_situacao" id="action_boleto_nfe_situacao_btn" type="object" class="oe_highlight" string="Situação Boletos" groups="account.group_account_invoice" attrs="{'invisible': ['|',('state', '=', 'draft'),('l10n_br_situacao_nf', '!=', 'autorizado')]}"/>
+                    <button name="action_boleto_nfe_descarte" id="action_boleto_nfe_descarte_btn" type="object" class="oe_highlight" string="Descarte Boletos" groups="account.group_account_invoice" attrs="{'invisible': ['|',('state', '=', 'draft'),('l10n_br_situacao_nf', '!=', 'autorizado')]}"/>
+                    <button name="action_boleto_nfe_imprimir" id="action_boleto_nfe_imprimir_btn" type="object" class="oe_highlight" string="Imprimir Boletos" groups="account.group_account_invoice" attrs="{'invisible': ['|',('state', '=', 'draft'),('l10n_br_situacao_nf', '!=', 'autorizado')]}"/>
+                    <button name="action_boleto_nfe_download" id="action_boleto_nfe_download_btn" type="object" class="oe_highlight" string="Download Boletos" groups="account.group_account_invoice" attrs="{'invisible': ['|',('state', '=', 'draft'),('l10n_br_situacao_nf', '!=', 'autorizado')]}"/>
+                    -->
+
+                </button>
+
+                <xpath expr="//header" position="after">
+
+                    <div class="alert alert-secondary alert-dismissible fade show" role="alert" style="margin-bottom:0px;" attrs="{'invisible': ['|','|',('type', '=', 'entry'),('state','=','draft'),('l10n_br_situacao_nf', '!=', 'rascunho')]}">
+                        ATENÇÃO: NF-e não transmitida.
+                    </div>
+                    <div class="alert alert-success alert-dismissible fade show" role="alert" style="margin-bottom:0px;" attrs="{'invisible': [('l10n_br_situacao_nf', '!=', 'autorizado')]}">
+                        <field name="l10n_br_xmotivo_nf" nolabel="1" readonly="1"/>
+                    </div>
+                    <div class="alert alert-info alert-dismissible fade show" role="alert" style="margin-bottom:0px;" attrs="{'invisible': ['&amp;',('l10n_br_situacao_nf', '!=', 'cancelado'),('l10n_br_situacao_nf', '!=', 'cce')]}">
+                        <field name="l10n_br_xmotivo_nf" nolabel="1" readonly="1"/>
+                    </div>
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert" style="margin-bottom:0px;" attrs="{'invisible': [('l10n_br_situacao_nf', 'not in', ['excecao_autorizado','excecao_cancelado','excecao_cce'])]}">
+                        <field name="l10n_br_xmotivo_nf" nolabel="1" readonly="1"/>
+                    </div>
+
+                </xpath>
+
+                <field name="invoice_incoterm_id" position="replace"/>
+
+                <page id="invoice_tab" position="after">	
+
+                    <page name="fiscal" string="Fiscal" attrs="{'invisible': [('type', '=', 'entry')]}">
+
+                        <group string="Dados fiscais" name="fiscal_data">	
+                            <group>	
+                                <field name="l10n_br_compra_indcom"/>	
+                                <field name="l10n_br_imposto_auto"/>	
+                                <!--	
+                                <label for="l10n_br_calcular_imposto" string=" Atualizar Impostos" class="fa fa-search oe_edit_only"/>	
+                                <field name="l10n_br_calcular_imposto" invisible="1"/>	
+                                -->	
+                                <field name="l10n_br_cfop_id"/>	
+                                <field name="l10n_br_operacao_id" reaonly="1" force_save="1"/>	
+                                <field name="dfe_id" reaonly="1" force_save="1"/>
+                                <field name="l10n_br_iss_municipio_id"/>
+                            </group>	
+                            <group colspan="2" col="2">	
+                                <separator string="Informação Fiscal" colspan="4"/>	
+                                <field name="l10n_br_informacao_fiscal" colspan="3" nolabel="1"/>	
+                                <separator string="Informação Complementar" colspan="4"/>	
+                                <field name="l10n_br_informacao_complementar" colspan="3" nolabel="1"/>	
+                            </group>	
+                        </group>	
+
+                        <group string="Dados Transmissão" name="xml_data">	
+                            <group>	
+                                <field name="l10n_br_tipo_documento"/>	
+                                <field name="l10n_br_chave_nf"/>	
+                                <field name="l10n_br_numero_nf"/>	
+                                <field name="l10n_br_numero_nfse"/>	
+                                <field name="l10n_br_numero_rps"/>	
+                                <field name="l10n_br_serie_nf"/>	
+                                <field name="l10n_br_cstat_nf"/>	
+                                <field name="l10n_br_xmotivo_nf"/>	
+                                <field name="simples_nacional"/>	
+                            </group>	
+                            <group>	
+                                <field name="l10n_br_xml_aut_nfe" widget="binary" filename="l10n_br_xml_aut_nfe_fname" attrs="{'readonly': True}" force_save="1"/>	
+                                <field name="l10n_br_pdf_aut_nfe" widget="binary" filename="l10n_br_pdf_aut_nfe_fname" attrs="{'readonly': True}" force_save="1"/>	
+                                <field name="l10n_br_xml_cce_nfe" widget="binary" filename="l10n_br_xml_cce_nfe_fname" attrs="{'readonly': True}" force_save="1"/>	
+                                <field name="l10n_br_pdf_cce_nfe" widget="binary" filename="l10n_br_pdf_cce_nfe_fname" attrs="{'readonly': True}" force_save="1"/>	
+                                <field name="l10n_br_xml_can_nfe" widget="binary" filename="l10n_br_xml_can_nfe_fname" attrs="{'readonly': True}" force_save="1"/>	
+                                <field name="l10n_br_pdf_can_nfe" widget="binary" filename="l10n_br_pdf_can_nfe_fname" attrs="{'readonly': True}" force_save="1"/>	
+                            </group>	
+                            <group>	
+                                <field name="l10n_br_sequencia_evento"/>	
+                                <field name="l10n_br_correcao"/>	
+                                <field name="l10n_br_motivo"/>	
+                            </group>	
+                        </group>	
+
+                        <group string="Totais" name="total_fiscal_data">	
+                            <group>	
+                                <field name="l10n_br_icms_base"/>	
+                                <field name="l10n_br_icms_valor"/>	
+                                <field name="l10n_br_icms_valor_isento"/>	
+                                <field name="l10n_br_icms_valor_outros"/>	
+                                <field name="l10n_br_icms_valor_desonerado"/>	
+                                <field name="l10n_br_icms_dest_valor"/>	
+                                <field name="l10n_br_icms_remet_valor"/>	
+                                <field name="l10n_br_fcp_dest_valor"/>	
+                                <field name="l10n_br_fcp_st_valor"/>	
+                                <field name="l10n_br_fcp_st_ant_valor"/>	
+                                <field name="l10n_br_icmsst_base"/>	
+                                <field name="l10n_br_icmsst_valor"/>	
+                                <field name="l10n_br_icmsst_valor_outros"/>	
+                                <field name="l10n_br_prod_valor"/>	
+                            </group>	
+                            <group>	
+                                <!--	
+                                <field name="l10n_br_frete" force_save="1"/>	
+                                <field name="l10n_br_seguro"/>	
+                                <field name="l10n_br_despesas_acessorias"/>	
+                                -->	
+                                <field name="l10n_br_desc_valor"/>	
+                                <field name="l10n_br_ipi_valor"/>	
+                                <field name="l10n_br_ipi_valor_isento"/>	
+                                <field name="l10n_br_ipi_valor_outros"/>	
+                                <field name="l10n_br_pis_valor"/>	
+                                <field name="l10n_br_pis_valor_isento"/>	
+                                <field name="l10n_br_pis_valor_outros"/>	
+                                <field name="l10n_br_cofins_valor"/>	
+                                <field name="l10n_br_cofins_valor_isento"/>	
+                                <field name="l10n_br_cofins_valor_outros"/>	
+                                <field name="l10n_br_ii_valor"/>	
+                                <field name="l10n_br_ii_valor_aduaneira"/>	
+                                <field name="l10n_br_iss_valor"/>	
+                                <field name="l10n_br_irpj_valor"/>	
+                                <field name="l10n_br_csll_valor"/>	
+                                <field name="l10n_br_irpj_ret_valor"/>	
+                                <field name="l10n_br_inss_ret_valor"/>	
+                                <field name="l10n_br_iss_ret_valor"/>	
+                                <field name="l10n_br_csll_ret_valor"/>	
+                                <field name="l10n_br_pis_ret_valor"/>	
+                                <field name="l10n_br_cofins_ret_valor"/>	
+                                <field name="l10n_br_total_nfe"/>	
+                                <field name="l10n_br_total_tributos"/>	
+                            </group>	
+                        </group>	
+
+                    </page>	
+
+                    <page name="referencia" string="Referência" attrs="{'invisible': [('type', '=', 'entry')]}">	
+
+                        <field name="referencia_ids" mode="tree,kanban">	
+                            <tree string="NF-e referências" editable="bottom">	
+                                <field name="l10n_br_chave_nf"/>	
+                            </tree>	
+                        </field>	
+
+                    </page>	
+
+                    <page name="frete" string="Transporte" attrs="{'invisible': [('type', '=', 'entry')]}">	
+
+                        <group string="Dados de frete" name="frete_data">	
+                            <group>	
+                                <field name="invoice_incoterm_id"/>	
+                                <field name="l10n_br_carrier_id"/>	
+                                <field name="l10n_br_peso_liquido"/>	
+                                <field name="l10n_br_peso_bruto"/>	
+                                <field name="l10n_br_volumes"/>	
+                                <field name="l10n_br_especie"/>	
+                            </group>	
+                        </group>	
+
+                        <group string="Dados do Veículo" name="veiculo_data">	
+                            <group>	
+                                <field name="l10n_br_veiculo_placa"/>	
+                                <field name="l10n_br_veiculo_uf"/>	
+                                <field name="l10n_br_veiculo_rntc"/>	
+                            </group>	
+                        </group>	
+
+                        <group string="Dados de Exportação" name="exportacao_data">	
+                            <group>	
+                                <field name="l10n_br_local_despacho"/>	
+                                <field name="l10n_br_local_embarque"/>	
+                                <field name="l10n_br_uf_saida_pais"/>	
+                            </group>	
+                        </group>	
+
+                        <group string="Dados CT-e" name="cte_data">	
+                            <group>	
+                                <field name="l10n_br_municipio_inicio_id"/>	
+                                <field name="l10n_br_municipio_fim_id"/>	
+                            </group>	
+                        </group>	
+
+                    </page>	
+
+                </page>
+
+                <field name="invoice_date" position="after">
+                    <field name="payment_acquirer_id" attrs="{'invisible': [('type', '=', 'entry')]}"/>
+                </field>
+
+                <field name="ref" position="after">
+                    <field name="partner_contact_id" attrs="{'invisible': [('type', '=', 'entry')]}"/>
+                    <field name="l10n_br_tipo_pedido" attrs="{'invisible': [('type', '=', 'entry')]}"/>
+                    <field name="l10n_br_tipo_pedido_entrada" attrs="{'invisible': [('type', '=', 'entry')]}"/>
+                    <field name="l10n_br_operacao_consumidor" attrs="{'invisible': [('type', '=', 'entry')]}"/>
+                    <field name="l10n_br_indicador_presenca" attrs="{'invisible': [('type', '=', 'entry')]}"/>
+                    <field name="l10n_br_pedido_compra" attrs="{'invisible': [('type', '=', 'entry')]}"/>
+                    <field name="l10n_br_item_pedido_compra" attrs="{'invisible': [('type', '=', 'entry')]}"/>
+                </field>
+
+                <field name="currency_id" position="after">
+                    <field name="invoice_incoterm_id" attrs="{'invisible': [('type', '=', 'entry')]}"/>
+                    <field name="l10n_br_frete" force_save="1" attrs="{'invisible': [('type', '=', 'entry')]}"/>
+                    <field name="l10n_br_seguro" force_save="1" attrs="{'invisible': [('type', '=', 'entry')]}"/>
+                    <field name="l10n_br_despesas_acessorias" force_save="1" attrs="{'invisible': [('type', '=', 'entry')]}"/>
+                    <label for="l10n_br_calcular_imposto" string=" Atualizar Impostos" class="fa fa-search oe_edit_only" attrs="{'invisible': [('type', '=', 'entry')]}"/>
+                    <field name="l10n_br_calcular_imposto" invisible="1"/>
+                </field>
+
+                <field name="amount_by_group" position="after">
+                    <field name="l10n_br_desc_valor" widget='monetary' options="{'currency_field': 'currency_id'}"/>
+                </field>
+
+                <xpath expr="//field[@name='invoice_line_ids']/tree/field[@name='quantity']" position="before">
+                    <field name="l10n_br_cfop_codigo"/>
+                </xpath>
+
+                <xpath expr="//field[@name='invoice_line_ids']/tree/field[@name='tax_ids']" position="after">
+                    <field name="l10n_br_frete" invisible="1" force_save="1"/>
+                    <field name="l10n_br_seguro" invisible="1" force_save="1"/>
+                    <field name="l10n_br_despesas_acessorias" invisible="1" force_save="1"/>
+                    <field name="l10n_br_desc_valor" invisible="1" force_save="1"/>
+                    <field name="l10n_br_icms_aliquota" string="% ICMS" optional="hide"/>
+                    <field name="l10n_br_icms_valor" string="R$ ICMS" optional="hide"/>
+                    <field name="l10n_br_icmsst_mva" string="% MVA ICMSST" optional="hide"/>
+                    <field name="l10n_br_icmsst_aliquota" string="% ICMSST" optional="hide"/>
+                    <field name="l10n_br_icmsst_valor" string="R$ ICMSST"/>
+                    <field name="l10n_br_ipi_aliquota" string="% IPI" optional="hide"/>
+                    <field name="l10n_br_ipi_valor" string="R$ IPI" force_save="1"/>
+                    <field name="l10n_br_pis_aliquota" string="% PIS" optional="hide"/>
+                    <field name="l10n_br_pis_valor" string="R$ PIS" optional="hide"/>
+                    <field name="l10n_br_cofins_aliquota" string="% COFINS" optional="hide"/>
+                    <field name="l10n_br_cofins_valor" string="R$ COFINS" optional="hide"/>
+                    <field name="l10n_br_ii_valor" string="R$ II" optional="hide"/>
+                    <field name="l10n_br_ii_valor_aduaneira" string="R$ ADUANEIRA" optional="hide"/>
+                    <field name="l10n_br_iss_valor" string="R$ IIS" optional="hide"/>
+                    <field name="l10n_br_irpj_valor" string="R$ IRPJ" optional="hide"/>
+                    <field name="l10n_br_csll_valor" string="R$ CSLL" optional="hide"/>
+                    <field name="l10n_br_irpj_ret_valor" string="R$ IRPJ (Retido)" optional="hide"/>
+                    <field name="l10n_br_inss_ret_valor" string="R$ INSS (Retido)" optional="hide"/>
+                    <field name="l10n_br_iss_ret_valor" string="R$ ISS (Retido)" optional="hide"/>
+                    <field name="l10n_br_csll_ret_valor" string="R$ CSLL (Retido)" optional="hide"/>
+                    <field name="l10n_br_pis_ret_valor" string="R$ PIS (Retido)" optional="hide"/>
+                    <field name="l10n_br_cofins_ret_valor" string="R$ COFINS (Retido)" optional="hide"/>
+                    <field name="l10n_br_di_adicao_id" optional="hide"/>
+                </xpath>
+
+                <xpath expr="//field[@name='invoice_line_ids']/tree/field[@name='name']" position="attributes">
+                    <attribute name="optional">hide</attribute>
+                </xpath>
+
+                <xpath expr="//field[@name='invoice_line_ids']/tree/field[@name='account_id']" position="attributes">
+                    <attribute name="optional">hide</attribute>
+                </xpath>
+
+                <xpath expr="//field[@name='invoice_line_ids']/tree/field[@name='analytic_account_id']" position="attributes">
+                    <attribute name="optional">hide</attribute>
+                </xpath>
+
+                <xpath expr="//field[@name='invoice_line_ids']/tree/field[@name='tax_ids']" position="attributes">
+                    <attribute name="optional">hide</attribute>
+                </xpath>
+
+                <xpath expr="//field[@name='invoice_line_ids']/form/sheet/group/field[@name='product_id']" position="before">
+                    <field name="l10n_br_compra_indcom"/>
+                </xpath>
+
+                <xpath expr="//field[@name='invoice_line_ids']/form/sheet/group/field[@name='discount']" position="after">
+                    <field name="l10n_br_desc_valor" force_save="1"/>
+                    <field name="l10n_br_frete" force_save="1"/>
+                    <field name="l10n_br_seguro" force_save="1"/>
+                    <field name="l10n_br_despesas_acessorias" force_save="1"/>
+                </xpath>
+
+                <xpath expr="//field[@name='invoice_line_ids']/form/sheet/group/field[@name='analytic_tag_ids']" position="after">
+                    <field name="l10n_br_imposto_auto" invisible="1"/>
+                    <field name="l10n_br_operacao_id" force_save="1"/>
+                    <field name="l10n_br_cfop_id" force_save="1"/>
+                    <field name="l10n_br_pedido_compra"/>
+                    <field name="l10n_br_item_pedido_compra"/>
+                    <field name="l10n_br_informacao_adicional"/>
+                </xpath>
+
+                <xpath expr="//field[@name='invoice_line_ids']/tree" position="attributes">
+                    <attribute name="editable"/>
+                </xpath>
+
+                <xpath expr="//field[@name='invoice_line_ids']/form/sheet/group/field[@name='tax_ids']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+
+                <xpath expr="//field[@name='invoice_line_ids']" position="attributes">
+                    <attribute name="context">{'default_company_id': company_id, 'default_l10n_br_compra_indcom':l10n_br_compra_indcom,'default_l10n_br_pedido_compra': l10n_br_pedido_compra,'default_l10n_br_item_pedido_compra': l10n_br_item_pedido_compra, 'default_l10n_br_imposto_auto': l10n_br_imposto_auto}</attribute>
+                </xpath>
+
+                <xpath expr="//field[@name='line_ids']/tree/field[@name='account_id']" position="after">
+                    <field name="l10n_br_operacao_id" invisible="1"/>
+                    <field name="l10n_br_cfop_id" invisible="1"/>
+                    <field name="l10n_br_cfop_codigo" invisible="1"/>
+                    <field name="l10n_br_frete" invisible="1" force_save="1"/>
+                    <field name="l10n_br_seguro" invisible="1" force_save="1"/>
+                    <field name="l10n_br_despesas_acessorias" invisible="1" force_save="1"/>
+                    <field name="l10n_br_desc_valor" invisible="1" force_save="1"/>
+                    <field name="l10n_br_prod_valor" invisible="1"/>
+                    <field name="l10n_br_total_nfe" invisible="1"/>
+                    <field name="l10n_br_total_tributos" invisible="1"/>
+                    <field name="l10n_br_informacao_adicional" invisible="1"/>
+                    <field name="l10n_br_pedido_compra" invisible="1"/>
+                    <field name="l10n_br_item_pedido_compra" invisible="1"/>
+                    <field name="l10n_br_compra_indcom" invisible="1"/>
+                    <field name="l10n_br_mensagem_fiscal_ids" invisible="1"/>
+                    <field name="l10n_br_imposto_auto" invisible="1"/>
+                    <field name="l10n_br_calcular_imposto" invisible="1"/>
+                    <field name="l10n_br_icms_modalidade_base" invisible="1"/>
+                    <field name="l10n_br_icms_reducao_base" invisible="1"/>
+                    <field name="l10n_br_icms_diferido_valor_operacao" invisible="1"/>
+                    <field name="l10n_br_icms_diferido_aliquota" invisible="1"/>
+                    <field name="l10n_br_icms_diferido_valor" invisible="1"/>
+                    <field name="l10n_br_icms_cst" invisible="1"/>
+                    <field name="l10n_br_icms_base" invisible="1"/>
+                    <field name="l10n_br_icms_aliquota" invisible="1"/>
+                    <field name="l10n_br_icms_valor" invisible="1"/>
+                    <field name="l10n_br_icms_valor_isento" invisible="1"/>
+                    <field name="l10n_br_icms_valor_outros" invisible="1"/>
+                    <field name="l10n_br_icms_valor_desonerado" invisible="1"/>
+                    <field name="l10n_br_icms_motivo_desonerado" invisible="1"/>
+                    <field name="l10n_br_icms_dest_base" invisible="1"/>
+                    <field name="l10n_br_icms_dest_aliquota" invisible="1"/>
+                    <field name="l10n_br_icms_inter_aliquota" invisible="1"/>
+                    <field name="l10n_br_icms_inter_participacao" invisible="1"/>
+                    <field name="l10n_br_icms_dest_valor" invisible="1"/>
+                    <field name="l10n_br_icms_remet_valor" invisible="1"/>
+                    <field name="l10n_br_icms_credito_aliquota" invisible="1"/>
+                    <field name="l10n_br_icms_credito_valor" invisible="1"/>
+                    <field name="l10n_br_codigo_beneficio" invisible="1"/>
+                    <field name="l10n_br_fcp_base" invisible="1"/>
+                    <field name="l10n_br_fcp_dest_aliquota" invisible="1"/>
+                    <field name="l10n_br_fcp_dest_valor" invisible="1"/>
+                    <field name="l10n_br_fcp_st_base" invisible="1"/>
+                    <field name="l10n_br_fcp_st_aliquota" invisible="1"/>
+                    <field name="l10n_br_fcp_st_valor" invisible="1"/>
+                    <field name="l10n_br_fcp_st_ant_base" invisible="1"/>
+                    <field name="l10n_br_fcp_st_ant_aliquota" invisible="1"/>
+                    <field name="l10n_br_fcp_st_ant_valor" invisible="1"/>
+                    <field name="l10n_br_icmsst_modalidade_base" invisible="1"/>
+                    <field name="l10n_br_icmsst_reducao_base" invisible="1"/>
+                    <field name="l10n_br_icmsst_mva" invisible="1"/>
+                    <field name="l10n_br_icmsst_base" invisible="1"/>
+                    <field name="l10n_br_icmsst_aliquota" invisible="1"/>
+                    <field name="l10n_br_icmsst_valor" invisible="1"/>
+                    <field name="l10n_br_icmsst_valor_outros" invisible="1"/>
+                    <field name="l10n_br_icmsst_retido_base" invisible="1"/>
+                    <field name="l10n_br_icmsst_retido_aliquota" invisible="1"/>
+                    <field name="l10n_br_icmsst_substituto_valor" invisible="1"/>
+                    <field name="l10n_br_icmsst_substituto_valor_outros" invisible="1"/>
+                    <field name="l10n_br_icmsst_retido_valor" invisible="1"/>
+                    <field name="l10n_br_icmsst_retido_valor_outros" invisible="1"/>
+                    <field name="l10n_br_icmsst_base_propria_aliquota" invisible="1"/>
+                    <field name="l10n_br_icmsst_uf" invisible="1"/>
+                    <field name="l10n_br_ipi_cst" invisible="1"/>
+                    <field name="l10n_br_ipi_base" invisible="1"/>
+                    <field name="l10n_br_ipi_aliquota" invisible="1"/>
+                    <field name="l10n_br_ipi_valor" invisible="1"/>
+                    <field name="l10n_br_ipi_valor_isento" invisible="1"/>
+                    <field name="l10n_br_ipi_valor_outros" invisible="1"/>
+                    <field name="l10n_br_ipi_cnpj" invisible="1"/>
+                    <field name="l10n_br_ipi_selo_codigo" invisible="1"/>
+                    <field name="l10n_br_ipi_selo_quantidade" invisible="1"/>
+                    <field name="l10n_br_ipi_enq" invisible="1"/>
+                    <field name="l10n_br_pis_cst" invisible="1"/>
+                    <field name="l10n_br_pis_base" invisible="1"/>
+                    <field name="l10n_br_pis_aliquota" invisible="1"/>
+                    <field name="l10n_br_pis_valor" invisible="1"/>
+                    <field name="l10n_br_pis_valor_isento" invisible="1"/>
+                    <field name="l10n_br_pis_valor_outros" invisible="1"/>
+                    <field name="l10n_br_cofins_cst" invisible="1"/>
+                    <field name="l10n_br_cofins_base" invisible="1"/>
+                    <field name="l10n_br_cofins_aliquota" invisible="1"/>
+                    <field name="l10n_br_cofins_valor" invisible="1"/>
+                    <field name="l10n_br_cofins_valor_isento" invisible="1"/>
+                    <field name="l10n_br_cofins_valor_outros" invisible="1"/>
+                    <field name="l10n_br_ii_base" invisible="1"/>
+                    <field name="l10n_br_ii_aliquota" invisible="1"/>
+                    <field name="l10n_br_ii_valor" invisible="1"/>
+                    <field name="l10n_br_ii_valor_aduaneira" invisible="1"/>
+                    <field name="l10n_br_iss_base" invisible="1"/>
+                    <field name="l10n_br_iss_aliquota" invisible="1"/>
+                    <field name="l10n_br_iss_valor" invisible="1"/>
+                    <field name="l10n_br_irpj_base" invisible="1"/>
+                    <field name="l10n_br_irpj_aliquota" invisible="1"/>
+                    <field name="l10n_br_irpj_valor" invisible="1"/>
+                    <field name="l10n_br_csll_base" invisible="1"/>
+                    <field name="l10n_br_csll_aliquota" invisible="1"/>
+                    <field name="l10n_br_csll_valor" invisible="1"/>
+                    <field name="l10n_br_irpj_ret_base" invisible="1"/>
+                    <field name="l10n_br_irpj_ret_aliquota" invisible="1"/>
+                    <field name="l10n_br_irpj_ret_valor" invisible="1"/>
+                    <field name="l10n_br_inss_ret_base" invisible="1"/>
+                    <field name="l10n_br_inss_ret_aliquota" invisible="1"/>
+                    <field name="l10n_br_inss_ret_valor" invisible="1"/>
+                    <field name="l10n_br_iss_ret_base" invisible="1"/>
+                    <field name="l10n_br_iss_ret_aliquota" invisible="1"/>
+                    <field name="l10n_br_iss_ret_valor" invisible="1"/>
+                    <field name="l10n_br_csll_ret_base" invisible="1"/>
+                    <field name="l10n_br_csll_ret_aliquota" invisible="1"/>
+                    <field name="l10n_br_csll_ret_valor" invisible="1"/>
+                    <field name="l10n_br_pis_ret_base" invisible="1"/>
+                    <field name="l10n_br_pis_ret_aliquota" invisible="1"/>
+                    <field name="l10n_br_pis_ret_valor" invisible="1"/>
+                    <field name="l10n_br_cofins_ret_base" invisible="1"/>
+                    <field name="l10n_br_cofins_ret_aliquota" invisible="1"/>
+                    <field name="l10n_br_cofins_ret_valor" invisible="1"/>
+                    <field name="l10n_br_di_adicao_id" invisible="1"/>
+                    <field name="l10n_br_cobranca_idintegracao" invisible="1"/>
+                    <field name="l10n_br_cobranca_transmissao" invisible="1"/>
+                    <field name="l10n_br_cobranca_arquivo_remessa" invisible="1"/>
+                    <field name="l10n_br_cobranca_protocolo" invisible="1"/>
+                    <field name="l10n_br_cobranca_parcela" invisible="1"/>
+                    <field name="l10n_br_cobranca_nossonumero" invisible="1"/>
+                    <field name="l10n_br_cobranca_situacao" invisible="1"/>
+                    <field name="l10n_br_cobranca_situacao_mensagem" invisible="1"/>
+                    <field name="l10n_br_pdf_boleto" invisible="1"/>
+                    <field name="l10n_br_pdf_boleto_fname" invisible="1"/>
+                </xpath>
+
+                <xpath expr="//field[@name='invoice_line_ids']/form/sheet/field[@name='name']" position="after">
+
+                    <group string="Impostos">
+
+                        <field name="l10n_br_imposto_auto" invisible="1"/>
+                        <group string="ICMS" colspan="4">
+                            <group>
+                                <field name="l10n_br_icms_modalidade_base" string="Modalidade" force_save="1"/>
+                                <field name="l10n_br_icms_cst" string="CST" force_save="1"/>
+                                <field name="l10n_br_icms_base" string="Base de Cálculo" force_save="1"/>
+                                <field name="l10n_br_icms_aliquota" string="Alíquota" force_save="1"/>
+                                <field name="l10n_br_icms_valor" string="Valor Tributável" force_save="1"/>
+                            </group>
+                            <group>
+                                <field name="l10n_br_icms_valor_isento" string="Valor Isento" force_save="1"/>
+                                <field name="l10n_br_icms_valor_outros" string="Valor Outros" force_save="1"/>
+                                <field name="l10n_br_icms_valor_desonerado" string="Valor Desonerado" force_save="1"/>
+                                <field name="l10n_br_icms_motivo_desonerado" string="Motivo Desoneração" force_save="1"/>
+                                <field name="l10n_br_codigo_beneficio" string="Código Benefício" force_save="1"/>
+                            </group>
+                        </group>
+
+                        <group string="DIFAL ICMS">
+                            <field name="l10n_br_icms_dest_base" string="Base de Cálculo" force_save="1"/>
+                            <field name="l10n_br_icms_dest_aliquota" string="Alíquota Destino" force_save="1"/>
+                            <field name="l10n_br_icms_inter_aliquota" string="Alíquota Inter" force_save="1"/>
+                            <field name="l10n_br_icms_inter_participacao" string="Participação" force_save="1"/>
+                            <field name="l10n_br_icms_dest_valor" string="Valor UF Destino" force_save="1"/>
+                            <field name="l10n_br_icms_remet_valor" string="Valor UF Remetente" force_save="1"/>
+                        </group>
+
+                        <group string="ICMS Diferido">
+                            <field name="l10n_br_icms_reducao_base" string="Redução" force_save="1"/>
+                            <field name="l10n_br_icms_diferido_valor_operacao" string="Valor Operação" force_save="1"/>
+                            <field name="l10n_br_icms_diferido_aliquota" string="Alíquota" force_save="1"/>
+                            <field name="l10n_br_icms_diferido_valor" string="Valor" force_save="1"/>
+                        </group>
+
+                        <group string="ICMS ST" colspan="4">
+                            <group>
+                                <field name="l10n_br_icmsst_modalidade_base" string="Modalidade" force_save="1"/>
+                                <field name="l10n_br_icmsst_reducao_base" string="Redução" force_save="1"/>
+                                <field name="l10n_br_icmsst_mva" string="MVA" force_save="1"/>
+                                <field name="l10n_br_icmsst_base" string="Base de Cálculo" force_save="1"/>
+                            </group>
+                            <group>
+                                <field name="l10n_br_icmsst_aliquota" string="Alíquota" force_save="1"/>
+                                <field name="l10n_br_icmsst_valor" string="Valor Tributável" force_save="1"/>
+                                <field name="l10n_br_icmsst_valor_outros" string="Valor Outros" force_save="1"/>
+                                <field name="l10n_br_icmsst_base_propria_aliquota" string="Base de Cálculo (Operação Própria)" force_save="1"/>
+                                <field name="l10n_br_icmsst_uf" string="UF Devido" force_save="1"/>
+                            </group>
+                        </group>
+
+                        <group string="ICMS ST Retido">
+                            <field name="l10n_br_icmsst_retido_base" string="Base de Cálculo" force_save="1"/>
+                            <field name="l10n_br_icmsst_retido_aliquota" string="Alíquota" force_save="1"/>
+                            <field name="l10n_br_icmsst_substituto_valor" string="Valor Substituto" force_save="1"/>
+                            <field name="l10n_br_icmsst_substituto_valor_outros" string="Valor Substituto Outros" force_save="1"/>
+                            <field name="l10n_br_icmsst_retido_valor" string="Valor Retido" force_save="1"/>
+                            <field name="l10n_br_icmsst_retido_valor_outros" string="Valor Retido Outros" force_save="1"/>
+                        </group>
+
+                        <group string="II">
+                            <field name="l10n_br_ii_base" string="Base de Cálculo" force_save="1"/>
+                            <field name="l10n_br_ii_aliquota" string="Alíquota" force_save="1"/>
+                            <field name="l10n_br_ii_valor" string="Valor Tributável" force_save="1"/>
+                            <field name="l10n_br_ii_valor_aduaneira" string="Valor Aduaneira" force_save="1"/>
+                            <field name="l10n_br_di_adicao_id" force_save="1"/>
+                        </group>
+
+                        <group string="IPI" colspan="4">
+                            <group>
+                                <field name="l10n_br_ipi_cst" string="CST" force_save="1"/>
+                                <field name="l10n_br_ipi_base" string="Base de Cálculo" force_save="1"/>
+                                <field name="l10n_br_ipi_aliquota" string="Alíquota" force_save="1"/>
+                                <field name="l10n_br_ipi_valor" string="Valor Tributável" force_save="1"/>
+                                <field name="l10n_br_ipi_valor_isento" string="Valor Isento" force_save="1"/>
+                                <field name="l10n_br_ipi_valor_outros" string="Valor Outros" force_save="1"/>
+                            </group>
+                            <group>
+                                <field name="l10n_br_ipi_cnpj" string="CNPJ Fabricante" force_save="1"/>
+                                <field name="l10n_br_ipi_selo_codigo" string="Código Selo" force_save="1"/>
+                                <field name="l10n_br_ipi_selo_quantidade" string="Quantidade Selo" force_save="1"/>
+                                <field name="l10n_br_ipi_enq" string="Enquadramento" force_save="1"/>
+                            </group>
+                        </group>
+
+                        <group string="PIS">
+                            <field name="l10n_br_pis_cst" string="CST" force_save="1"/>
+                            <field name="l10n_br_pis_base" string="Base de Cálculo" force_save="1"/>
+                            <field name="l10n_br_pis_aliquota" string="Alíquota" force_save="1"/>
+                            <field name="l10n_br_pis_valor" string="Valor Tributável" force_save="1"/>
+                            <field name="l10n_br_pis_valor_isento" string="Valor Isento" force_save="1"/>
+                            <field name="l10n_br_pis_valor_outros" string="Valor Outros" force_save="1"/>
+                        </group>
+
+                        <group string="COFINS">
+                            <field name="l10n_br_cofins_cst" string="CST" force_save="1"/>
+                            <field name="l10n_br_cofins_base" string="Base de Cálculo" force_save="1"/>
+                            <field name="l10n_br_cofins_aliquota" string="Alíquota" force_save="1"/>
+                            <field name="l10n_br_cofins_valor" string="Valor Tributável" force_save="1"/>
+                            <field name="l10n_br_cofins_valor_isento" string="Valor Isento" force_save="1"/>
+                            <field name="l10n_br_cofins_valor_outros" string="Valor Outros" force_save="1"/>
+                        </group>
+
+                        <separator string="Serviços (Saída)" colspan="4"/>
+
+                        <group string="ISS">
+                            <field name="l10n_br_iss_base" string="Base de Cálculo" force_save="1"/>
+                            <field name="l10n_br_iss_aliquota" string="Alíquota" force_save="1"/>
+                            <field name="l10n_br_iss_valor" string="Valor" force_save="1"/>
+                        </group>
+
+                        <group string="IRPJ">
+                            <field name="l10n_br_irpj_base" string="Base de Cálculo" force_save="1"/>
+                            <field name="l10n_br_irpj_aliquota" string="Alíquota" force_save="1"/>
+                            <field name="l10n_br_irpj_valor" string="Valor" force_save="1"/>
+                        </group>
+
+                        <group string="CSLL">
+                            <field name="l10n_br_csll_base" string="Base de Cálculo" force_save="1"/>
+                            <field name="l10n_br_csll_aliquota" string="Alíquota" force_save="1"/>
+                            <field name="l10n_br_csll_valor" string="Valor" force_save="1"/>
+                        </group>
+
+                        <separator string="Serviços (Retenção)" colspan="4"/>
+
+                        <group string="ISS Retido">
+                            <field name="l10n_br_iss_ret_base" string="Base de Cálculo" force_save="1"/>
+                            <field name="l10n_br_iss_ret_aliquota" string="Alíquota" force_save="1"/>
+                            <field name="l10n_br_iss_ret_valor" string="Valor" force_save="1"/>
+                        </group>
+
+                        <group string="IRPJ Retido">
+                            <field name="l10n_br_irpj_ret_base" string="Base de Cálculo" force_save="1"/>
+                            <field name="l10n_br_irpj_ret_aliquota" string="Alíquota" force_save="1"/>
+                            <field name="l10n_br_irpj_ret_valor" string="Valor" force_save="1"/>
+                        </group>
+
+                        <group string="INSS Retido">
+                            <field name="l10n_br_inss_ret_base" string="Base de Cálculo" force_save="1"/>
+                            <field name="l10n_br_inss_ret_aliquota" string="Alíquota" force_save="1"/>
+                            <field name="l10n_br_inss_ret_valor" string="Valor" force_save="1"/>
+                        </group>
+
+                        <group string="ISS Retido">
+                            <field name="l10n_br_iss_ret_base" string="Base de Cálculo" force_save="1"/>
+                            <field name="l10n_br_iss_ret_aliquota" string="Alíquota" force_save="1"/>
+                            <field name="l10n_br_iss_ret_valor" string="Valor" force_save="1"/>
+                        </group>
+
+                        <group string="CSLL Retido">
+                            <field name="l10n_br_csll_ret_base" string="Base de Cálculo" force_save="1"/>
+                            <field name="l10n_br_csll_ret_aliquota" string="Alíquota" force_save="1"/>
+                            <field name="l10n_br_csll_ret_valor" string="Valor" force_save="1"/>
+                        </group>
+
+                        <group string="PIS Retido">
+                            <field name="l10n_br_pis_ret_base" string="Base de Cálculo" force_save="1"/>
+                            <field name="l10n_br_pis_ret_aliquota" string="Alíquota" force_save="1"/>
+                            <field name="l10n_br_pis_ret_valor" string="Valor" force_save="1"/>
+                        </group>
+
+                        <group string="COFINS Retido">
+                            <field name="l10n_br_cofins_ret_base" string="Base de Cálculo" force_save="1"/>
+                            <field name="l10n_br_cofins_ret_aliquota" string="Alíquota" force_save="1"/>
+                            <field name="l10n_br_cofins_ret_valor" string="Valor" force_save="1"/>
+                        </group>
+
+                        <separator string="FCP" colspan="4"/>
+
+                        <group string="ICMS">
+                            <field name="l10n_br_fcp_base" string="Base de Cálculo" force_save="1"/>
+                            <field name="l10n_br_fcp_dest_aliquota" string="Alíquota" force_save="1"/>
+                            <field name="l10n_br_fcp_dest_valor" string="Valor" force_save="1"/>
+                        </group>
+
+                        <group string="ICMS ST Retido">
+                            <field name="l10n_br_fcp_st_base" string="Base de Cálculo" force_save="1"/>
+                            <field name="l10n_br_fcp_st_aliquota" string="Alíquota" force_save="1"/>
+                            <field name="l10n_br_fcp_st_valor" string="Valor" force_save="1"/>
+                        </group>
+
+                        <group string="ICMS ST Retido Ant.">
+                            <field name="l10n_br_fcp_st_ant_base" string="Base de Cálculo" force_save="1"/>
+                            <field name="l10n_br_fcp_st_ant_aliquota" string="Alíquota" force_save="1"/>
+                            <field name="l10n_br_fcp_st_ant_valor" string="Valor" force_save="1"/>
+                        </group>
+
+                        <separator string="Simples Nacional" colspan="4"/>
+
+                        <group string="ICMS Crédito Aplicável">
+                            <field name="l10n_br_icms_credito_aliquota" string="Alíquota" force_save="1"/>
+                            <field name="l10n_br_icms_credito_valor" string="Valor" force_save="1"/>
+                        </group>
+
+                    </group>
+
+                </xpath>
+
+                <xpath expr="//field[@name='line_ids']/form/group/field[@name='date_maturity']" position="after">
+                    <field name="l10n_br_cobranca_idintegracao"/>
+                    <field name="l10n_br_cobranca_transmissao"/>
+                    <field name="l10n_br_cobranca_arquivo_remessa"/>
+                    <field name="l10n_br_cobranca_protocolo"/>
+                    <field name="l10n_br_cobranca_parcela"/>
+                    <field name="l10n_br_cobranca_nossonumero"/>
+                    <field name="l10n_br_cobranca_situacao"/>
+                    <field name="l10n_br_cobranca_situacao_mensagem"/>
+                    <field name="l10n_br_pdf_boleto" widget="binary" filename="l10n_br_pdf_boleto_fname" attrs="{'readonly': True}"/>
+                </xpath>
+
+                <xpath expr="//field[@name='line_ids']/tree/field[@name='date_maturity']" position="attributes">
+                    <attribute name="optional">show</attribute>
+                </xpath>
+
+                <xpath expr="//field[@name='line_ids']/tree/field[@name='date_maturity']" position="after">
+                    <field name="l10n_br_pdf_boleto_fname" invisible="1"/>
+                    <field name="l10n_br_pdf_boleto" widget="binary" filename="l10n_br_pdf_boleto_fname" optional="show"/>
+                </xpath>
+
+                <page id="aml_tab" position="after">
+                    <page name="parcelas" string="Parcelas" attrs="{'invisible': [('type', '=', 'entry')]}">
+
+                        <field name="payment_line_ids" mode="tree">	
+                            <tree string="Parcelas">	
+
+                                <field name="l10n_br_pdf_boleto_fname" invisible="1"/>	
+                                <field name="l10n_br_paga" invisible="1"/>	
+
+                                <field name="l10n_br_cobranca_parcela" optional="show"/>	
+                                <field name="l10n_br_cobranca_nossonumero" optional="show"/>	
+                                <field name="date_maturity" optional="show"/>	
+                                <field name="balance" string="Valor"/>	
+                                <field name="l10n_br_pdf_boleto" widget="binary" filename="l10n_br_pdf_boleto_fname" optional="show"/>	
+                                <field name="l10n_br_cobranca_situacao" optional="show"/>	
+
+                                <field name="l10n_br_cobranca_idintegracao" optional="hide"/>
+                                <field name="l10n_br_cobranca_transmissao" optional="hide"/>
+                                <field name="l10n_br_cobranca_arquivo_remessa" optional="hide"/>
+                                <field name="l10n_br_cobranca_protocolo" optional="hide"/>	
+                                <field name="l10n_br_cobranca_situacao_mensagem" optional="hide"/>	
+
+                                <button name="%(action_pagamento_boleto_cancel)d" string="Registrar Pagamento" type="action" icon="fa-money text-success" attrs="{'invisible':[('l10n_br_paga', '=', True)]}"/>	
+
+                            </tree>	
+                        </field>	
+
+                    </page>	
+
+                </page>
+
+            </field>
+        </record>
+
+        <record id="view_move_line_tree_inherit" model="ir.ui.view">
+            <field name="name">account.move.line.tree.inherit</field>
+            <field name="model">account.move.line</field>
+            <field name="inherit_id" ref="account.view_move_line_tree"/>
+            <field name="arch" type="xml">
+
+                <field name="journal_id" position="after">
+                    <field name="l10n_br_tipo_pedido_str" optional="hide"/>
+                </field>
+
+                <field name="date_maturity" position="after">
+                    <field name="l10n_br_pdf_boleto_fname" invisible="1"/>
+                    <field name="l10n_br_pdf_boleto" widget="binary" filename="l10n_br_pdf_boleto_fname" optional="hide"/>
+                </field>
+
+            </field>
+        </record>
+
+        <record id="view_l10n_br_tipo_documento_mdfe_tree" model="ir.ui.view">
+            <field name="name">tipo.documento.mdfe.tree</field>
+            <field name="model">l10n_br_ciel_it_account.tipo.documento.mdfe</field>
+            <field name="arch" type="xml">
+                <tree string="Tipo de Documento MDF-e">
+                    <field name="name"/>
+                    <field name="l10n_br_modelo"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_l10n_br_tipo_documento_mdfe_form" model="ir.ui.view">
+            <field name="name">tipo.documento.mdfe.form</field>
+            <field name="model">l10n_br_ciel_it_account.tipo.documento.mdfe</field>
+            <field name="arch" type="xml">
+                <form string="Tipo de Documento MDF-e">
+                    <sheet>
+                        <group>
+                            <field name="company_id" invisible="1"/>
+                            <field name="name"/>
+                            <field name="sequence_id"/>
+                            <field name="l10n_br_versao"/>
+                            <field name="l10n_br_ambiente"/>
+                            <field name="l10n_br_emitente"/>
+                            <field name="l10n_br_modelo"/>
+                            <field name="l10n_br_modal"/>
+                            <field name="l10n_br_tipo_emissao"/>
+                            <field name="l10n_br_numero_mdfe_id"/>
+                            <field name="l10n_br_serie_mdfe"/>
+                        </group>
+                        <group>
+                            <field name="l10n_br_grupo" password="True"/>
+                            <field name="l10n_br_url" password="True"/>
+                            <field name="l10n_br_usuario" password="True"/>
+                            <field name="l10n_br_senha" password="True"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_l10n_br_tipo_documento_mdfe" model="ir.actions.act_window">
+            <field name="name">Tipo de Documento MDF-e</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">l10n_br_ciel_it_account.tipo.documento.mdfe</field>
+            <field name="view_id" ref="view_l10n_br_tipo_documento_mdfe_tree"/>
+        </record>
+
+        <menuitem id="menu_l10n_br_documento_fiscal_entries" name="Documento Fiscal" parent="account.menu_finance_entries" sequence="200" groups="account.group_account_invoice"/>
+        <menuitem id="menu_l10n_br_documento_fiscal_config" name="Documento Fiscal" parent="account.menu_finance_configuration" sequence="200" groups="account.group_account_invoice"/>
+        <menuitem id="menu_l10n_br_tipo_documento_mdfe" action="l10n_br_ciel_it_account.action_l10n_br_tipo_documento_mdfe" parent="l10n_br_ciel_it_account.menu_l10n_br_documento_fiscal_config" sequence="10"/>
+
+        <record id="view_l10n_br_motorista_tree" model="ir.ui.view">
+            <field name="name">motorista.tree</field>
+            <field name="model">l10n_br_ciel_it_account.motorista</field>
+            <field name="arch" type="xml">
+                <tree string="Motorista">
+                    <field name="name"/>
+                    <field name="l10n_br_cpf"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_l10n_br_motorista_form" model="ir.ui.view">
+            <field name="name">motorista.form</field>
+            <field name="model">l10n_br_ciel_it_account.motorista</field>
+            <field name="arch" type="xml">
+                <form string="Motorista">
+                    <sheet>
+                        <group>
+                            <field name="name"/>
+                            <field name="l10n_br_cpf"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_l10n_br_motorista" model="ir.actions.act_window">
+            <field name="name">Motorista</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">l10n_br_ciel_it_account.motorista</field>
+            <field name="view_id" ref="view_l10n_br_motorista_tree"/>
+        </record>
+
+        <menuitem id="menu_l10n_br_motorista" action="l10n_br_ciel_it_account.action_l10n_br_motorista" parent="l10n_br_ciel_it_account.menu_l10n_br_documento_fiscal_config" sequence="20"/>
+
+        <record id="view_l10n_br_veiculo_tree" model="ir.ui.view">
+            <field name="name">veiculo.tree</field>
+            <field name="model">l10n_br_ciel_it_account.veiculo</field>
+            <field name="arch" type="xml">
+                <tree string="Veículo">
+                    <field name="name"/>
+                    <field name="l10n_br_placa"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_l10n_br_veiculo_form" model="ir.ui.view">
+            <field name="name">veiculo.form</field>
+            <field name="model">l10n_br_ciel_it_account.veiculo</field>
+            <field name="arch" type="xml">
+                <form string="Veículo">
+                    <sheet>
+                        <group>
+                            <field name="name"/>
+                            <field name="l10n_br_placa"/>
+                            <field name="l10n_br_uf"/>
+                            <field name="l10n_br_tara"/>
+                            <field name="l10n_br_capacidade_kg"/>
+                            <field name="l10n_br_capacidade_m3"/>
+                            <field name="l10n_br_rodado"/>
+                            <field name="l10n_br_carroceria"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_l10n_br_veiculo" model="ir.actions.act_window">
+            <field name="name">Veículo</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">l10n_br_ciel_it_account.veiculo</field>
+            <field name="view_id" ref="view_l10n_br_veiculo_tree"/>
+        </record>
+
+        <menuitem id="menu_l10n_br_veiculo" action="l10n_br_ciel_it_account.action_l10n_br_veiculo" parent="l10n_br_ciel_it_account.menu_l10n_br_documento_fiscal_config" sequence="30"/>
+
+        <record id="view_mdfe_cancel_form" model="ir.ui.view">
+            <field name="name">Cancelar MDF-e</field>
+            <field name="model">l10n_br_ciel_it_account.mdfe.cancel</field>
+            <field name="arch" type="xml">
+            <form string="Cancelar MDF-e">
+                <group>
+                    <legend>Cancelar MDF-e</legend>
+                    <group>
+                        <field name="l10n_br_motivo"/>
+                    </group>
+                </group>
+
+                <footer>
+                    <button name="do_cancelar_mdfe" type="object" string="CONFIRMAR" class="oe_highlight"/>
+                            OU
+                    <button special="cancel" string="CANCELAR"/>
+                </footer>
+            </form>
+            </field>
+        </record>
+
+        <record id="action_mdfe_cancel" model="ir.actions.act_window">
+            <field name="name">Cancelar MDF-e</field>
+            <field name="res_model">l10n_br_ciel_it_account.mdfe.cancel</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="view_mdfe_cancel_form"/>
+            <field name="target">new</field>
+        </record>
+
+        <record id="view_l10n_br_mdfe_tree" model="ir.ui.view">
+            <field name="name">mdfe.tree</field>
+            <field name="model">l10n_br_ciel_it_account.mdfe</field>
+            <field name="arch" type="xml">
+                <tree string="Documento Fiscal MDF-e" decoration-info="l10n_br_status == '01'" decoration-muted="l10n_br_status == '03'">
+                    <field name="name"/>
+                    <field name="l10n_br_numero_mdfe"/>
+                    <field name="l10n_br_serie_mdfe"/>
+                    <field name="l10n_br_status"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_l10n_br_mdfe_form" model="ir.ui.view">
+            <field name="name">mdfe.form</field>
+            <field name="model">l10n_br_ciel_it_account.mdfe</field>
+            <field name="arch" type="xml">
+
+                <form string="Documento Fiscal MDF-e">
+                    <header>
+                        <button name="action_gerar_mdfe" id="action_gerar_mdfe_btn" type="object" class="oe_highlight" string="Transmitir MDF-e" groups="account.group_account_invoice" attrs="{'invisible': [('l10n_br_status', '!=', '01')]}"/>
+                        <button name="action_resolver_mdfe" id="action_resolver_mdfe_btn" type="object" class="oe_highlight" string="Resolver MDF-e" groups="account.group_account_invoice" attrs="{'invisible': ['|','|','|',('l10n_br_chave_mdfe','=',False),('l10n_br_cstat_mdfe', '=', '100'),('l10n_br_cstat_mdfe', '=', '135'),('l10n_br_xmotivo_mdfe', '=', False)]}"/>
+                        <button name="%(action_mdfe_cancel)d" id="action_cancelar_mdfe_btn" type="action" class="oe_highlight" string="Cancelar MDF-e" groups="account.group_account_invoice" attrs="{'invisible': [('l10n_br_status', '!=', '02')]}"/>
+                        <button name="action_encerrar_mdfe" id="action_encerrar_mdfe_btn" type="object" class="oe_highlight" string="Encerrar MDF-e" groups="account.group_account_invoice" attrs="{'invisible': [('l10n_br_status', '!=', '02')]}"/>
+                        <field name="l10n_br_status" widget="statusbar"/>
+                    </header>
+
+                    <div class="alert alert-success" role="alert" style="margin-bottom:0px;" attrs="{'invisible': ['|',('l10n_br_cstat_mdfe', '!=', '100'),('l10n_br_xmotivo_mdfe', '=', False)]}">
+                        <field name="l10n_br_xmotivo_mdfe" nolabel="1" readonly="1"/>
+                    </div>
+                    <div class="alert alert-info" role="alert" style="margin-bottom:0px;" attrs="{'invisible': ['|',('l10n_br_cstat_mdfe', '!=', '135'),('l10n_br_xmotivo_mdfe', '=', False)]}">
+                        <field name="l10n_br_xmotivo_mdfe" nolabel="1" readonly="1"/>
+                    </div>
+                    <div class="alert alert-danger" role="alert" style="margin-bottom:0px;" attrs="{'invisible': ['|','|',('l10n_br_cstat_mdfe', '=', '100'),('l10n_br_cstat_mdfe', '=', '135'),('l10n_br_xmotivo_mdfe', '=', False)]}">
+                        <field name="l10n_br_xmotivo_mdfe" nolabel="1" readonly="1"/>
+                    </div>
+
+                    <sheet>
+
+                        <div>  
+                            <h1>
+                                <span attrs="{'invisible': ['|', ('l10n_br_status', '!=', '01'), ('name', '!=', '/')]}">Rascunho</span>
+                            </h1>
+                            <h1 class="mt0">
+                                <field name="name" readonly="True" attrs="{'invisible':[('name', '=', '/')]}"/>
+                            </h1>
+                        </div>
+                        <group>
+                            <group>
+                                <field name="name"/>
+                                <field name="l10n_br_tipo_documento_id" attrs="{'readonly': [('l10n_br_status', '!=', '01')]}"/>
+                                <field name="company_id" attrs="{'readonly': [('l10n_br_status', '!=', '01')]}"/>
+                                <field name="l10n_br_date_emissao" attrs="{'readonly': [('l10n_br_status', '!=', '01')]}"/>
+                                <field name="l10n_br_date_inicio" attrs="{'readonly': [('l10n_br_status', '!=', '01')]}"/>
+                                <field name="l10n_br_municipio_id" attrs="{'readonly': [('l10n_br_status', '!=', '01')]}"/>
+                                <field name="l10n_br_uf_final" attrs="{'readonly': [('l10n_br_status', '!=', '01')]}"/>
+                                <field name="l10n_br_ufs_percurso" attrs="{'readonly': [('l10n_br_status', '!=', '01')]}"/>
+                                <field name="move_ids" widget="many2many_tags" attrs="{'readonly': [('l10n_br_status', '!=', '01')]}"/>
+                                <field name="l10n_br_veiculo_tracao_id" attrs="{'readonly': [('l10n_br_status', '!=', '01')]}"/>
+                                <field name="l10n_br_motorista_ids" widget="many2many_tags" attrs="{'readonly': [('l10n_br_status', '!=', '01')]}"/>
+                                <field name="l10n_br_veiculo_reboque_ids" widget="many2many_tags" attrs="{'readonly': [('l10n_br_status', '!=', '01')]}"/>
+                            </group>
+                            <group>
+                                <field name="l10n_br_numero_mdfe"/>
+                                <field name="l10n_br_serie_mdfe"/>
+                                <field name="l10n_br_chave_mdfe"/>
+                                <field name="l10n_br_cstat_mdfe"/>
+                                <field name="l10n_br_xmotivo_mdfe"/>
+                                <field name="l10n_br_motivo"/>
+                                <field name="l10n_br_xml_aut_mdfe" widget="binary" filename="l10n_br_xml_aut_mdfe_fname" attrs="{'readonly': True}"/>
+                                <field name="l10n_br_pdf_aut_mdfe" widget="binary" filename="l10n_br_pdf_aut_mdfe_fname" attrs="{'readonly': True}"/>
+                            </group>
+                        </group>
+
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers" groups="base.group_user"/>
+                        <field name="activity_ids" widget="mail_activity"/>
+                        <field name="message_ids" widget="mail_thread"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_l10n_br_mdfe" model="ir.actions.act_window">
+            <field name="name">Documento Fiscal MDF-e</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">l10n_br_ciel_it_account.mdfe</field>
+            <field name="view_id" ref="view_l10n_br_mdfe_tree"/>
+        </record>
+
+        <menuitem id="menu_l10n_br_mdfe" action="l10n_br_ciel_it_account.action_l10n_br_mdfe" parent="l10n_br_ciel_it_account.menu_l10n_br_documento_fiscal_entries" sequence="10"/>
+
+        <record id="view_l10n_br_tipo_cobranca_search" model="ir.ui.view">
+            <field name="name">tipo.cobranca.search</field>
+            <field name="model">l10n_br_ciel_it_account.tipo.cobranca</field>
+            <field name="arch" type="xml">
+                <search string="Search Tipo de Documento">               
+                    <field name="name"/>
+                </search>
+            </field>
+        </record>
+
+        <record id="view_l10n_br_tipo_cobranca_tree" model="ir.ui.view">
+            <field name="name">tipo.cobranca.tree</field>
+            <field name="model">l10n_br_ciel_it_account.tipo.cobranca</field>
+            <field name="arch" type="xml">
+                <tree string="Tipo de Cobrança">
+                    <field name="name"/>
+                    <field name="journal_id"/>
+                    <field name="l10n_br_cedente_banco"/>
+                    <field name="l10n_br_cedente_conta"/>
+                    <field name="l10n_br_cedente_conta_digito"/>
+                    <field name="l10n_br_cedente_convenio"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_l10n_br_tipo_cobranca_form" model="ir.ui.view">
+            <field name="name">tipo.cobranca.form</field>
+            <field name="model">l10n_br_ciel_it_account.tipo.cobranca</field>
+            <field name="arch" type="xml">
+                <form string="Tipo de Cobrança">
+                    <sheet>
+                        <group>
+                            <field name="company_id" invisible="1"/>
+                            <field name="name"/>
+                            <field name="journal_id"/>
+                            <field name="l10n_br_cedente_banco"/>
+                            <field name="l10n_br_cedente_conta"/>
+                            <field name="l10n_br_cedente_conta_digito"/>
+                            <field name="l10n_br_cedente_convenio"/>
+                            <field name="l10n_br_nosso_numero_id"/>
+                            <field name="l10n_br_transmissao"/>
+                            <field name="l10n_br_especie"/>
+                            <field name="l10n_br_mensagem_pagamento"/>
+                            <field name="l10n_br_mensagem_01"/>
+                            <field name="l10n_br_mensagem_02"/>
+                            <field name="l10n_br_mensagem_03"/>
+                            <field name="l10n_br_mensagem_04"/>
+                            <field name="l10n_br_mensagem_05"/>
+                            <field name="l10n_br_mensagem_06"/>
+                            <field name="l10n_br_mensagem_07"/>
+                            <field name="l10n_br_mensagem_08"/>
+                            <field name="l10n_br_mensagem_09"/>
+                            <field name="l10n_br_codigo_multa"/>
+                            <field name="l10n_br_percentual_multa"/>
+                            <field name="l10n_br_codigo_juros"/>
+                            <field name="l10n_br_percentual_juros"/>
+                            <field name="l10n_br_codigo_baixa"/>
+                            <field name="l10n_br_dias_baixa"/>
+                            <field name="l10n_br_codigo_protesto"/>
+                            <field name="l10n_br_dias_protesto"/>
+                        </group>
+                        <group>
+                            <field name="l10n_br_url" password="True"/>
+                            <field name="l10n_br_token" password="True"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_l10n_br_tipo_cobranca" model="ir.actions.act_window">
+            <field name="name">Tipo de Cobrança</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">l10n_br_ciel_it_account.tipo.cobranca</field>
+            <field name="view_id" ref="view_l10n_br_tipo_cobranca_tree"/>
+        </record>
+
+        <menuitem id="menu_l10n_br_tipo_cobranca" action="l10n_br_ciel_it_account.action_l10n_br_tipo_cobranca" parent="account.root_payment_menu" sequence="100"/>
+
+        <record id="view_l10n_br_ciel_it_account_di_tree" model="ir.ui.view">
+            <field name="name">di.tree</field>
+            <field name="model">l10n_br_ciel_it_account.di</field>
+            <field name="arch" type="xml">
+                <tree string="Declaração de Importação" decoration-info="state == '01'" decoration-muted="state == '02'">
+                    <field name="name"/>
+                    <field name="state"/>
+                    <field name="l10n_br_data_di"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_l10n_br_ciel_it_account_di_form" model="ir.ui.view">
+            <field name="name">di.form</field>
+            <field name="model">l10n_br_ciel_it_account.di</field>
+            <field name="arch" type="xml">
+                <form string="Declaração de Importação">
+                    <header>
+                        <button name="action_rascunho" id="action_rascunho_btn" type="object" class="oe_highlight" string="Rascunho" groups="account.group_account_invoice"/>
+                        <button name="action_gerar_rateio" id="action_gerar_rateio_btn" type="object" class="oe_highlight" string="Gerar Rateio" groups="account.group_account_invoice"/>
+                        <button name="action_gerar_po" id="action_gerar_po_btn" type="object" class="oe_highlight" string="Gerar PO" groups="account.group_account_invoice"/>
+                        <field name="state" widget="statusbar"/>
+                    </header>
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="name"/>
+                                <field name="partner_id"/>
+                                <field name="purchase_ids" widget="many2many_tags" readonly="1"/>
+                                <field name="l10n_br_data_di"/>
+                                <field name="l10n_br_data_desembaraco"/>
+                                <field name="payment_term_id"/>
+                            </group>
+                            <group>
+                                <field name="l10n_br_local_desembaraco"/>
+                                <field name="l10n_br_uf_desembaraco"/>
+                                <field name="l10n_br_tipo_importacao"/>
+                                <field name="l10n_br_via_transporte"/>
+                                <field name="incoterm_id"/>
+                            </group>
+                        </group>
+                        <notebook>
+                            <page string="Despesas">
+                                <field name="despesa_ids" mode="tree,kanban">
+                                    <tree string="Despesas">
+                                        <field name="name"/>
+                                        <field name="l10n_br_tipo_despesa"/>
+                                        <field name="currency_id"/>
+                                        <field name="l10n_br_valor" sum="Valor Total"/>
+                                        <field name="l10n_br_valor_brl" sum="Valor Total (BRL)"/>
+                                    </tree>
+                                    <form>
+                                        <sheet>
+                                            <group>
+                                                <group>
+                                                    <field name="name"/>
+                                                    <field name="l10n_br_tipo_despesa"/>
+                                                </group>
+                                                <group>
+                                                    <field name="currency_id"/>
+                                                    <field name="l10n_br_valor"/>
+                                                    <field name="l10n_br_valor_brl" readonly="1" force_save="1"/>
+                                                </group>
+                                            </group>
+                                        </sheet>
+                                    </form>
+                                </field>
+                            </page>
+                            <page string="Adições">
+                                <field name="adicao_ids" mode="tree,kanban">
+                                    <tree string="Adições">
+                                        <field name="l10n_br_numero"/>
+                                        <field name="l10n_br_icms_modalidade_base"/>
+                                        <field name="l10n_br_icms_cst"/>
+                                        <field name="l10n_br_icms_aliquota"/>
+                                        <field name="l10n_br_icms_reducao_base"/>
+                                        <field name="l10n_br_ipi_cst"/>
+                                        <field name="l10n_br_ipi_aliquota"/>
+                                        <field name="l10n_br_ii_aliquota"/>
+                                        <field name="l10n_br_pis_cst"/>
+                                        <field name="l10n_br_pis_aliquota"/>
+                                        <field name="l10n_br_cofins_cst"/>
+                                        <field name="l10n_br_cofins_aliquota"/>
+                                    </tree>
+                                    <form>
+                                        <sheet>
+                                            <group>
+                                                <group>
+                                                    <field name="l10n_br_numero"/>
+                                                    <field name="l10n_br_icms_modalidade_base"/>
+                                                    <field name="l10n_br_icms_cst"/>
+                                                    <field name="l10n_br_icms_aliquota"/>
+                                                    <field name="l10n_br_icms_reducao_base"/>
+                                                    <field name="l10n_br_ipi_cst"/>
+                                                    <field name="l10n_br_ipi_aliquota"/>
+                                                </group>
+                                                <group>
+                                                    <field name="l10n_br_ii_aliquota"/>
+                                                    <field name="l10n_br_pis_cst"/>
+                                                    <field name="l10n_br_pis_aliquota"/>
+                                                    <field name="l10n_br_cofins_cst"/>
+                                                    <field name="l10n_br_cofins_aliquota"/>
+                                                </group>
+                                            </group>
+                                        </sheet>
+                                    </form>
+                                </field>
+                            </page>
+                            <page string="Linhas">
+                                <field name="line_ids" mode="tree,kanban">
+                                    <tree string="Linhas">
+                                        <field name="l10n_br_di_adicao_id"/>
+                                        <field name="currency_id"/>
+                                        <field name="product_id"/>
+                                        <field name="l10n_br_quantidade"/>
+                                        <field name="uom_id"/>
+                                        <field name="l10n_br_peso"/>
+                                        <field name="l10n_br_peso_total" sum="Peso Total"/>
+                                        <field name="l10n_br_valor"/>
+                                        <field name="l10n_br_total" sum="Valor Total FOB"/>
+                                        <field name="l10n_br_valor_brl"/>
+                                        <field name="l10n_br_total_brl" sum="Valor Total FOB (BRL)"/>
+                                        <field name="l10n_br_valor_cif_brl"/>
+                                        <field name="l10n_br_total_cif_brl" sum="Valor Total CIF (BRL)"/>
+                                        <field name="l10n_br_valor_adicional_brl"/>
+                                        <field name="l10n_br_total_adicional_brl" sum="Valor Total Adicional (BRL)"/>
+                                        <field name="l10n_br_valor_aduaneira_brl"/>
+                                        <field name="l10n_br_total_aduaneira_brl" sum="Valor Total Aduaneira (BRL)"/>
+                                    </tree>
+                                    <form>
+                                        <sheet>
+                                            <group>
+                                                <group>
+                                                    <field name="l10n_br_di_adicao_id"/>
+                                                    <field name="currency_id"/>
+                                                    <field name="product_id"/>
+                                                    <field name="l10n_br_quantidade"/>
+                                                    <field name="uom_id"/>
+                                                    <field name="l10n_br_peso"/>
+                                                    <field name="l10n_br_valor"/>
+                                                    <field name="l10n_br_total" readonly="1" force_save="1"/>
+                                                </group>
+                                                <group>
+                                                    <field name="l10n_br_valor_brl" readonly="1" force_save="1"/>
+                                                    <field name="l10n_br_total_brl" readonly="1" force_save="1"/>
+                                                    <field name="l10n_br_valor_cif_brl" readonly="1" force_save="1"/>
+                                                    <field name="l10n_br_total_cif_brl" readonly="1" force_save="1"/>
+                                                    <field name="l10n_br_valor_adicional_brl" readonly="1" force_save="1"/>
+                                                    <field name="l10n_br_total_adicional_brl" readonly="1" force_save="1"/>
+                                                    <field name="l10n_br_valor_aduaneira_brl" readonly="1" force_save="1"/>
+                                                    <field name="l10n_br_total_aduaneira_brl" readonly="1" force_save="1"/>
+                                                </group>
+                                            </group>
+                                        </sheet>
+                                    </form>
+                                </field>
+                            </page>
+                            <page string="Moedas" mode="tree,kanban">
+                                <field name="moeda_ids">
+                                    <tree string="Moedas">
+                                        <field name="currency_id"/>
+                                        <field name="l10n_br_taxa"/>
+                                    </tree>
+                                    <form>
+                                        <sheet>
+                                            <group>
+                                                <group>
+                                                    <field name="currency_id"/>
+                                                </group>
+                                                <group>
+                                                    <field name="l10n_br_taxa"/>
+                                                </group>
+                                            </group>
+                                        </sheet>
+                                    </form>
+                                </field>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_l10n_br_ciel_it_account_di" model="ir.actions.act_window">
+            <field name="name">Declaração de Importação (DI)</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">l10n_br_ciel_it_account.di</field>
+            <field name="view_id" ref="view_l10n_br_ciel_it_account_di_tree"/>
+        </record>
+
+        <menuitem id="menu_l10n_br_ciel_it_account_di" action="l10n_br_ciel_it_account.action_l10n_br_ciel_it_account_di" parent="l10n_br_ciel_it_account.menu_l10n_br_documento_fiscal_entries" sequence="20"/>
+
+        <record id="view_l10n_br_dfe_search" model="ir.ui.view">
+            <field name="name">dfe.search</field>
+            <field name="model">l10n_br_ciel_it_account.dfe</field>
+            <field name="arch" type="xml">
+                <search string="Search DF-e">
+                    <field name="protnfe_infnfe_chnfe"/>
+                    <field name="nfe_infnfe_ide_nnf"/>
+                    <field name="name"/>
+
+                    <group expand="0" string="Group By">
+                        <filter name="group_l10n_br_data_entrada" string="Data de Entrada" context="{'group_by': 'l10n_br_data_entrada'}"/>
+                        <filter name="group_partner_id" string="Fornecedor" context="{'group_by': 'partner_id'}"/>
+                    </group>
+
+                </search>
+            </field>
+        </record>
+
+        <record id="view_l10n_br_dfe_tree" model="ir.ui.view">
+            <field name="name">dfe.tree</field>
+            <field name="model">l10n_br_ciel_it_account.dfe</field>
+            <field name="arch" type="xml">
+                <tree string="Documento Fiscal DF-e">
+                    <field name="name"/>
+                    <field name="nfe_infnfe_ide_dhemi"/>
+                    <field name="nfe_infnfe_ide_nnf"/>
+                    <field name="nfe_infnfe_ide_serie"/>
+                    <field name="nfe_infnfe_emit_cnpj"/>
+                    <field name="partner_id"/>
+                    <field name="protnfe_infnfe_chnfe"/>
+                    <field name="l10n_br_status"/>
+                </tree>
+            </field>
+        </record>
+        
+        <record id="view_l10n_br_dfe_form" model="ir.ui.view">
+            <field name="name">dfe.form</field>
+            <field name="model">l10n_br_ciel_it_account.dfe</field>
+            <field name="arch" type="xml">
+        
+                <form string="Documento Fiscal DF-e">
+                    <header>
+                        <field name="is_cte" invisible="1"/>
+                        <button name="action_sincronizar_dfe" id="action_sincronizar_dfe_btn" type="object" class="oe_highlight" string="Sincronizar" groups="account.group_account_invoice" attrs="{'invisible': [('l10n_br_status', '!=', '01')]}"/>
+                        <button name="action_ciencia_dfe" id="action_obter_dfe_btn" type="object" class="oe_highlight" string="Ciência da Operação" groups="account.group_account_invoice" attrs="{'invisible': [('l10n_br_status', '!=', '02')]}"/>
+                        <button name="action_parse_dfe" id="action_parse_dfe_btn" type="object" class="oe_highlight" string="LER XML" groups="account.group_account_invoice" attrs="{'invisible': ['&amp;','|','|',('l10n_br_status', '!=', '03'),('l10n_br_xml_dfe','=',False),('l10n_br_xml_dfe','=',False),('nfe_infnfe_emit_cnpj','!=',False)]}"/>
+                        <button name="action_atualizar_dfe" id="action_atualizar_dfe_btn" type="object" class="oe_highlight" string="ATUALIZAR" groups="account.group_account_invoice" attrs="{'invisible': ['|','|',('l10n_br_status', '!=', '03'),('l10n_br_xml_dfe','=',False),('nfe_infnfe_emit_cnpj','=',False)]}"/>
+                        <button name="action_rateio_dfe" id="action_rateio_dfe_btn" type="object" string="RATEIO FRETE" groups="account.group_account_invoice" attrs="{'invisible': ['|','|','|','|',('l10n_br_status', '!=', '04'),('l10n_br_xml_dfe','=',False),('nfe_infnfe_emit_cnpj','=',False),('partner_id','=',False),('is_cte','=',False)]}"/>
+                        <button name="action_gerar_po_dfe" id="action_gerar_po_dfe_btn" type="object" string="GERAR PO" groups="account.group_account_invoice" attrs="{'invisible': ['|','|','|',('l10n_br_status', '!=', '03'),('l10n_br_xml_dfe','=',False),('nfe_infnfe_emit_cnpj','=',False),('partner_id','=',False)]}"/>
+                        <!-- 
+                        <button name="action_escriturar_dfe" id="action_escriturar_dfe_btn" type="object" string="ESCRITURAR" groups="account.group_account_invoice" attrs="{'invisible': ['&amp;','|','|','|','|',('l10n_br_status', '!=', '04'),('l10n_br_status', '!=', '05'),('l10n_br_xml_dfe','=',False),('nfe_infnfe_emit_cnpj','=',False),('partner_id','=',False)]}"/>
+                        -->
+                        <button name="action_gerar_xmldanfe_dfe" id="action_gerar_xmldanfe_dfe_btn" type="object" string="Download XML/PDF" groups="account.group_account_invoice" attrs="{'invisible': ['|','|',('l10n_br_status', '!=', '03'),('l10n_br_xml_dfe','=',False)]}"/>
+                        <field name="l10n_br_status" widget="statusbar"/>
+                    </header>
+        
+                    <sheet>
+        
+                        <div>  
+                            <h1>
+                                <span attrs="{'invisible': ['|', ('l10n_br_status', '!=', '01'), ('name', '!=', '/')]}">Rascunho</span>
+                            </h1>
+                            <h1 class="mt0">
+                                <field name="name" readonly="True" attrs="{'invisible':[('name', '=', '/')]}"/>
+                            </h1>
+                        </div>
+                        <group>
+                            <group>
+                                <field name="protnfe_infnfe_chnfe" attrs="{'readonly': [('l10n_br_status', '!=', '01')]}"/>
+                                <field name="nfe_infnfe_ide_nnf"/>
+                                <field name="nfe_infnfe_ide_serie"/>
+                                <field name="nfe_infnfe_ide_dhemi"/>
+                                <field name="cte_infcte_ide_cmunini"/>
+                                <field name="cte_infcte_ide_cmunfim"/>
+                                <field name="l10n_br_data_entrada"/>
+                                <field name="nfe_infnfe_emit_cnpj"/>
+                                <field name="partner_id"/>
+                                <field name="payment_reference"/>
+                                <field name="purchase_id"/>
+                                <field name="l10n_br_numero_parcelas"/>
+                                <field name="l10n_br_tipo_pedido"/>
+                                <field name="l10n_br_xml_dfe" widget="binary" filename="l10n_br_xml_dfe_fname"/>
+                                <field name="l10n_br_pdf_dfe" widget="binary" filename="l10n_br_pdf_dfe_fname"/>
+                            </group>
+                            <group>
+                                <field name="nfe_infnfe_total_icms_vbc"/>
+                                <field name="nfe_infnfe_total_icms_vicms"/>
+                                <field name="nfe_infnfe_total_icms_vbcst"/>
+                                <field name="nfe_infnfe_total_icms_vst"/>
+                                <field name="nfe_infnfe_total_icms_vipi"/>
+                                <field name="nfe_infnfe_total_icms_voutro"/>
+                                <field name="nfe_infnfe_total_icms_vseg"/>
+                                <field name="nfe_infnfe_total_icms_vfrete"/>
+                                <field name="nfe_infnfe_total_icmstot_vprod"/>
+                                <field name="nfe_infnfe_total_icms_vdesc"/>
+                                <field name="nfe_infnfe_total_icmstot_vnf"/>
+                                <field name="purchase_fiscal_id" attrs="{'readonly': True}" force_save="1"/>
+                            </group>
+                        </group>
+
+                        <notebook>
+                            <page string="Produtos">
+    
+                                <field name="lines_ids" mode="tree,kanban">
+
+                                    <tree string="DF-e Itens" editable="bottom">
+
+                                        <field name="det_nitem" optional="hide"/>
+                                        <field name="purchase_id" optional="hide"/>
+                                        <field name="product_id"/>
+                                        <field name="account_analytic_id"/>
+                                        <field name="l10n_br_compra_indcom" string="Ind./Com." optional="hide"/>
+                                        <field name="det_prod_cprod" string="Código" optional="hide"/>
+                                        <field name="det_prod_xprod" string="Descrição" optional="show"/>
+                                        <field name="det_prod_qcom" optional="show"/>
+                                        <field name="l10n_br_quantidade" optional="show"/>
+                                        <field name="det_prod_vuncom" string="R$ Unitário" optional="show"/>
+                                        <field name="det_prod_vprod" string="R$ Total" optional="show" sum="R$ Total"/>
+                                        <field name="det_prod_vdesc" string="R$ Desconto" optional="show" sum="R$ Desconto"/>
+                                        <field name="det_imposto_icms_vicms" string="R$ ICMS" optional="hide" sum="R$ Total"/>
+                                        <field name="det_imposto_icms_vicmsst" string="R$ ICMSST" optional="hide" sum="R$ Total"/>
+                                        <field name="det_imposto_icms_vcredicmssn" string="R$ ICMS SN" optional="hide" sum="R$ Total"/>
+                                        <field name="det_imposto_icms_vbcstret" string="BC ICMSST Ret" optional="hide" sum="R$ Total"/>
+                                        <field name="det_imposto_icms_vicmsstret" string="R$ ICMSST Ret" optional="hide" sum="R$ Total"/>
+                                        <field name="det_imposto_icms_vicmssubstituto" string="R$ ICMSST Sub" optional="hide" sum="R$ Total"/>
+                                        <field name="det_imposto_ipi_vipi" string="R$ IPI" optional="hide" sum="R$ Total"/>
+                                        <field name="det_imposto_pis_vpis" string="R$ PIS" optional="hide"/>
+                                        <field name="det_imposto_cofins_vcofins" string="R$ COFINS" optional="hide"/>
+
+                                    </tree>
+
+                                </field>
+
+                            </page>
+                            <page string="Pagamentos">
+    
+                                <field name="dups_ids" mode="tree,kanban">
+
+                                    <tree string="DF-e Pagamentos" editable="bottom">
+
+                                        <field name="cobr_dup_ndup"/>
+                                        <field name="cobr_dup_dvenc"/>
+                                        <field name="cobr_dup_vdup"/>
+
+                                    </tree>
+
+                                </field>
+
+                            </page>
+                            <page string="Referências">
+    
+                                <field name="refs_ids" mode="tree,kanban">
+
+                                    <tree string="DF-e Referências" editable="bottom">
+
+                                        <field name="infdoc_infnfe_chave"/>
+
+                                    </tree>
+
+                                </field>
+
+                            </page>
+                        </notebook>
+        
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers" groups="base.group_user"/>
+                        <field name="activity_ids" widget="mail_activity"/>
+                        <field name="message_ids" widget="mail_thread"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+        
+        <record id="action_l10n_br_dfe" model="ir.actions.act_window">
+            <field name="name">Documento Fiscal DF-e</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">l10n_br_ciel_it_account.dfe</field>
+            <field name="view_id" ref="view_l10n_br_dfe_tree"/>
+        </record>
+        
+        <menuitem id="menu_l10n_br_dfe" action="l10n_br_ciel_it_account.action_l10n_br_dfe" parent="l10n_br_ciel_it_account.menu_l10n_br_documento_fiscal_entries" sequence="30"/>
+
+        <record id="view_l10n_br_inutilizar_nfe_tree" model="ir.ui.view">
+            <field name="name">inutilizar.nfe.tree</field>
+            <field name="model">l10n_br_ciel_it_account.inutilizar.nfe</field>
+            <field name="arch" type="xml">
+                <tree string="Inutilizar NF-e">
+                    <field name="name"/>
+                    <field name="numero_inicial"/>
+                    <field name="numero_final"/>
+                    <field name="serie"/>
+                    <field name="state"/>
+                    <field name="create_date"/>
+                </tree>
+            </field>
+        </record>
+        
+        <record id="view_l10n_br_inutilizar_nfe_form" model="ir.ui.view">
+            <field name="name">inutilizar.nfe.form</field>
+            <field name="model">l10n_br_ciel_it_account.inutilizar.nfe</field>
+            <field name="arch" type="xml">
+        
+                <form string="Inutilizar NF-e">
+                    <header>
+                        <button name="action_inutilizar_nfe" id="action_inutilizar_nfe_btn" type="object" class="oe_highlight" string="Inutilizar" groups="account.group_account_invoice" attrs="{'invisible': [('state', '!=', 'rascunho'),('state','!=','excecao_autorizado')]}"/>
+                        <field name="state" widget="statusbar"/>
+                    </header>
+        
+                    <sheet>
+        
+                        <div>  
+                            <h1>
+                                <span attrs="{'invisible': ['|', ('state', '!=', 'rascunho'), ('name', '!=', '/')]}">Rascunho</span>
+                            </h1>
+                            <h1 class="mt0">
+                                <field name="name" readonly="True" attrs="{'invisible':[('name', '=', '/')]}"/>
+                            </h1>
+                        </div>
+                        <group>
+                            <group>
+                                <field name="serie"/>
+                                <field name="numero_inicial"/>
+                                <field name="numero_final"/>
+                                <field name="motivo"/>
+                            </group>
+                            <group>
+                                <field name="cstat" readonly="1"/>
+                                <field name="protocolo" readonly="1"/>
+                                <field name="situacao" readonly="1"/>
+                            </group>
+                        </group>
+        
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers" groups="base.group_user"/>
+                        <field name="activity_ids" widget="mail_activity"/>
+                        <field name="message_ids" widget="mail_thread"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+        
+        <record id="action_l10n_br_inutilizar_nfe" model="ir.actions.act_window">
+            <field name="name">Inutilizar NF-e</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">l10n_br_ciel_it_account.inutilizar.nfe</field>
+            <field name="view_id" ref="view_l10n_br_inutilizar_nfe_tree"/>
+        </record>
+        
+        <menuitem id="menu_l10n_br_inutilizar_nfe" action="l10n_br_ciel_it_account.action_l10n_br_inutilizar_nfe" parent="l10n_br_ciel_it_account.menu_l10n_br_documento_fiscal_entries" sequence="40"/>
+        
+    </data>
+</odoo>

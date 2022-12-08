@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="cl_custom_view_sale_report_search_inherit" model="ir.ui.view">
+        <field name="name">cl.custom.sale.report.search.inherit</field>
+        <field name="model">sale.report</field>
+        <field name="inherit_id" ref="sale.view_order_product_search"/>
+        <field name="arch" type="xml">
+            <field name="user_id" position="after">
+                <field name="partner_zone_id"/>
+                <field name="l10n_br_icms_aliquota"/>
+                <field name="l10n_br_icms_valor"/>
+                <field name="l10n_br_icmsst_aliquota"/>
+                <field name="l10n_br_icmsst_valor"/>
+                <field name="l10n_br_icmsst_mva"/>
+                <field name="l10n_br_ipi_aliquota"/>
+                <field name="l10n_br_ipi_valor"/>
+                <field name="l10n_br_pis_aliquota"/>
+                <field name="l10n_br_pis_valor"/>
+                <field name="l10n_br_cofins_aliquota"/>
+                <field name="l10n_br_cofins_valor"/>
+                <field name="purchase_price"/>
+            </field>
+            <xpath expr="//group[1]" position="inside">
+                <filter string="Zones" name="sales_channel" context="{'group_by':'partner_zone_id'}"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

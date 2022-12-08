@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <template id="external_layout_background_inherited" inherit_id="web.external_layout_background">
+
+            <xpath expr="//span[@t-field='company.partner_id']" position="replace">
+                <span t-field="company.street"/>,
+                <t t-if="company.l10n_br_endereco_numero">
+                    <span t-field="company.l10n_br_endereco_numero"/><t t-if="company.street2">, <span t-field="company.street2"/></t><br/>
+                </t>
+                <span t-field="company.l10n_br_endereco_bairro"/>, <span t-field="company.l10n_br_municipio_id.name"/>,
+                <span t-field="company.zip"/>, <span t-field="company.country_id.name"/><br/>
+                CNPJ : <span t-field="company.l10n_br_cnpj"/>, Inscrição Estadual : <span t-field="company.l10n_br_ie"/>
+            </xpath>
+
+        </template>
+
+        <template id="report_saleorder_document_inherited" inherit_id="sale.report_saleorder_document">
+
+            <xpath expr="//t[@t-set='address']" position="replace">
+                <t t-set="address">
+                    <span t-field="doc.partner_id.name"/><br/>
+                    <span t-field="doc.partner_id.street"/>, <span t-field="doc.partner_id.l10n_br_endereco_numero"/><t t-if="doc.partner_id.street2">,<span t-field="doc.partner_id.street2"/></t><br/>
+                    <span t-field="doc.partner_id.l10n_br_endereco_bairro"/>,<span t-field="doc.partner_id.l10n_br_municipio_id.name"/><br/>
+                    <span t-field="doc.partner_id.state_id.code"/>,<span t-field="doc.partner_id.zip"/><br/>
+                    <span t-field="doc.partner_id.country_id.name"/><br/>
+                    <p t-if="doc.partner_id.vat"><t t-esc="doc.company_id.country_id.vat_label or 'Tax ID'"/>: <span t-field="doc.partner_id.vat"/></p>
+                    <t t-if="doc.partner_id.l10n_br_cnpj">
+                        CNPJ : <span t-field="doc.partner_id.l10n_br_cnpj"/><br/>
+                    </t>
+                    <t t-if="doc.partner_id.l10n_br_ie">
+                        Inscrição Estadual : <span t-field="doc.partner_id.l10n_br_ie"/><br/>
+                    </t>
+                    <t t-if="doc.partner_id.l10n_br_cpf">
+                        CPF : <span t-field="doc.partner_id.l10n_br_cpf"/>
+                    </t>
+                    <t t-if="doc.partner_id.phone">
+                        Telefone : <span t-field="doc.partner_id.phone"/>
+                    </t>
+                    <br/>
+                    <t t-if="doc.partner_id.email">
+                        E-mail : <span t-field="doc.partner_id.email"/>
+                    </t>
+                </t>
+            </xpath>
+            <xpath expr="//t[@t-set='information_block']" position="replace">
+                <t t-set="information_block">
+                    <strong t-if="doc.partner_shipping_id == doc.partner_invoice_id">Invoicing and Shipping Address:</strong>
+                    <strong t-if="doc.partner_shipping_id != doc.partner_invoice_id">Invoicing Address:</strong>
+                    <div t-field="doc.partner_invoice_id"
+                    t-options='{"widget": "contact", "fields": ["address", "name", "phone"], "no_marker": True, "phone_icons": True}'/>
+                    <t t-if="doc.partner_shipping_id != doc.partner_invoice_id">
+                        <strong>Shipping Address:</strong><br/>
+                        <span t-field="doc.partner_shipping_id.name"/><br/>
+                        <span t-field="doc.partner_shipping_id.street"/>, <span t-field="doc.partner_shipping_id.l10n_br_endereco_numero"/><t t-if="doc.partner_shipping_id.street2">,<span t-field="doc.partner_shipping_id.street2"/></t><br/>
+                        <span t-field="doc.partner_shipping_id.l10n_br_endereco_bairro"/>,<span t-field="doc.partner_shipping_id.l10n_br_municipio_id.name"/><br/>
+                        <span t-field="doc.partner_shipping_id.state_id.code"/>,<span t-field="doc.partner_shipping_id.zip"/><br/>
+                        <span t-field="doc.partner_shipping_id.country_id.name"/><br/>
+                    </t>
+                </t>
+            </xpath>
+            <xpath expr="//p[@t-if='doc.payment_term_id.note']" position="replace">
+            </xpath>
+            <xpath expr="//div[@t-if='doc.user_id.name']" position="replace">
+                <div t-if="doc.user_id.name" class="mw-100 mb-2">
+                    <strong>Salesperson:</strong>
+                    <p class="m-0" t-field="doc.user_id"/>
+                </div>
+            </xpath>
+            <xpath expr="//div[@id='informations']" position="inside">
+                <p t-if="doc.payment_term_id" class="col-auto mw-100 mb-2">
+                    <strong>Payment Terms:</strong> <br/>
+                    <span class="m-0" t-field="doc.payment_term_id.name"/>
+                </p>
+                <p t-if="doc.payment_acquirer_id.name" class="col-auto mw-100 mb-2">
+                    <strong>Forma de Pagamento:</strong> <br/>
+                    <span class="m-0" t-field="doc.payment_acquirer_id.name"/>
+                </p>
+            </xpath>
+            <xpath expr="//span[@t-field='line.name']" position="after">
+                <br/>
+                <span t-field="line.product_id.l10n_br_informacao_adicional"/>
+            </xpath>
+            <xpath expr="//th[@name='th_subtotal']" position="replace">
+                <th name="th_subtotal" class="text-right" style="width: 100px;">
+                    <t>Preço Total</t>
+                </th>
+            </xpath>
+            <xpath expr="//td[@name='td_subtotal']" position="replace">
+                <td name="td_subtotal" class="text-right o_price_total" style="width: 100px;">
+                    <span t-field="doc.currency_id.symbol" /> <span t-esc="line.l10n_br_total_nfe - line.l10n_br_frete" t-options='{"widget": "float", "precision": 2}'/>
+                </td>
+            </xpath>
+            <xpath expr="//th[@name='th_taxes']" position="replace">
+            </xpath>
+            <xpath expr="//td[@name='td_taxes']" position="replace">
+            </xpath>
+            <xpath expr="//t[@t-as='amount_by_group']" position="before">
+                <tr class="border-black o_subtotal" style="">
+                    <td name="td_l10n_br_desc_valor_label"><strong>Discounts</strong></td>
+                    <td name="td_l10n_br_desc_valor" class="text-right">
+                        <span t-field="doc.currency_id.symbol" /> <span t-field="doc.l10n_br_desc_valor" t-options='{"widget": "float", "precision": 2}'/>
+                    </td>
+                </tr>
+                <tr class="border-black o_subtotal" style="">
+                    <td name="td_amount_total_frete"><strong>Total Frete</strong></td>
+                    <td name="td_total_frete" class="text-right">
+                        <span t-field="doc.currency_id.symbol" /> <span t-field="doc.l10n_br_frete" t-options='{"widget": "float", "precision": 2}'/>
+                    </td>
+                </tr>
+            </xpath>
+            <xpath expr="//t[@t-as='amount_by_group']" position="replace">
+            </xpath>
+
+
+            <xpath expr="//table[hasclass('o_main_table')]/thead/tr/th[1]" position="after">
+                <th>Prazo de Entrega</th>
+            </xpath>
+    
+            <xpath expr="//table/tbody[hasclass('sale_tbody')]/t[2]/tr/t/td[1]" position="after">
+                <td>
+                    <t t-esc="( doc.date_order + datetime.timedelta(days=line.customer_lead)).strftime('%d/%m/%Y')"/>
+                </td>
+            </xpath>
+    
+        </template>
+
+    </data>
+</odoo>

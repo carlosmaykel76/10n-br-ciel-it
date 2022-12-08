@@ -1,0 +1,62 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<odoo>
+    <data>
+
+        <record id="view_account_sped_contribuicao_tree" model="ir.ui.view">
+            <field name="name">sped.contribuicao.tree</field>
+            <field name="model">l10n_br_ciel_it_account.sped.contribuicao</field>
+            <field name="arch" type="xml">
+                <tree string="Sped Contribuição">
+                    <field name="name"/>
+                    <field name="date_ini"/>
+                    <field name="date_fim"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_account_sped_contribuicao_form" model="ir.ui.view">
+            <field name="name">sped.contribuicao.form</field>
+            <field name="model">l10n_br_ciel_it_account.sped.contribuicao</field>
+            <field name="arch" type="xml">
+                <form string="Export File">
+
+                    <header>
+
+                        <button name="gerar_sped" string="GERAR" type="object" class="btn-primary"/>
+                        <button name="exportar_sped" string="EXPORTAR" type="object"/>
+
+                    </header>
+                    <sheet>
+
+                        <notebook>
+                            <page string="Principal">
+                                <group>
+                                    <group>
+                                        <field name="date_ini" string="Data Inicial"/>
+                                        <field name="date_fim" string="Data Final"/>
+                                        <field name="arquivo" force_save="1"/>
+                                        <field name="name" force_save="1"/>
+                                        <field name="situacao" force_save="1"/>
+                                        <field name="arquivo_sped" widget="binary" filename="arquivo_sped_fname" attrs="{'readonly': True}" force_save="1"/>
+                                        <field name="arquivo_sped_erros" widget="binary" filename="arquivo_sped_erros_fname" attrs="{'readonly': True}" force_save="1"/>
+                                    </group>
+                                </group>
+                            </page>
+                        </notebook>
+
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_account_sped_contribuicao" model="ir.actions.act_window">
+            <field name="name">Sped Contribuição</field>
+            <field name="res_model">l10n_br_ciel_it_account.sped.contribuicao</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="view_id" ref="view_account_sped_contribuicao_tree"/>
+        </record>
+
+        <menuitem id="menu_account_sped_contribuicao" name="Sped Contribuição (PIS/COFINS)" action="action_account_sped_contribuicao" parent="l10n_br_ciel_it_account.account_reports_brasil_reports_menu" sequence="220"/>
+
+    </data>
+</odoo>

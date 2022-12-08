@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="view_delivery_carrier_form_inherit" model="ir.ui.view">
+            <field name="name">delivery.carrier.form.inherit</field>
+            <field name="model">delivery.carrier</field>
+            <field name="inherit_id" ref="delivery.view_delivery_carrier_form"/>
+            <field name="arch" type="xml">
+
+                <xpath expr=".//field[@name='active']" position="after">
+                    <field name="l10n_br_partner_id"/>
+                </xpath>
+
+            </field>
+        </record>
+
+        <record id="view_choose_delivery_carrier_form_inherit" model="ir.ui.view">
+            <field name="name">choose.delivery.carrier.form.inherit</field>
+            <field name="model">choose.delivery.carrier</field>
+            <field name="inherit_id" ref="delivery.choose_delivery_carrier_view_form"/>
+            <field name="arch" type="xml">
+
+                <xpath expr=".//field[@name='display_price']" position="replace">
+                    <field name="delivery_price"/>
+                </xpath>
+
+            </field>
+        </record>
+
+        <record id="view_picking_withcarrier_out_form_inherit" model="ir.ui.view">
+            <field name="name">delivery.stock.picking_withcarrier.form.view</field>
+            <field name="model">stock.picking</field>
+            <field name="inherit_id" ref="delivery.view_picking_withcarrier_out_form"/>
+            <field name="arch" type="xml">
+
+                <xpath expr=".//label[@for='weight']" position="replace">
+                </xpath>
+                <xpath expr=".//label[@for='shipping_weight']" position="replace">
+                </xpath>
+                <xpath expr="//group[@name='carrier_data']/div[3]" position="replace">
+                </xpath>
+                <xpath expr="//group[@name='carrier_data']/div[2]" position="replace">
+                    <label for="l10n_br_peso_liquido" string="Peso Liquido"/>
+                    <div>
+                        <field name="l10n_br_peso_liquido" class="oe_inline"/>
+                        <field name="weight_uom_name" nolabel="1" class="oe_inline" style="margin-left:5px"/>
+                    </div>
+                    <label for="l10n_br_peso_bruto" string="Peso Bruto"/>
+                    <div>
+                        <field name="l10n_br_peso_bruto" class="oe_inline"/>
+                        <field name="weight_uom_name" nolabel="1" class="oe_inline" style="margin-left:5px"/>
+                    </div>
+                    <field name="l10n_br_volumes"/>
+                    <field name="l10n_br_especie"/>
+                    <field name="l10n_br_veiculo_placa"/>
+                    <field name="l10n_br_veiculo_uf"/>
+                    <field name="l10n_br_veiculo_rntc"/>
+                </xpath>
+
+                <field name="carrier_id" position="attributes">
+                    <attribute name="attrs">{'readonly': 0}</attribute>
+                </field>
+
+                <field name="carrier_tracking_ref" position="attributes">
+                    <attribute name="attrs">{'readonly': 0}</attribute>
+                </field>
+
+            </field>
+        </record>
+
+    </data>
+</odoo>

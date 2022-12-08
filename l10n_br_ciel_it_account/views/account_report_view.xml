@@ -1,0 +1,132 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<odoo>
+    <data>
+
+        <record id="view_account_fiscal_report" model="ir.ui.view">
+            <field name="name">Relatório Documento Fiscal</field>
+            <field name="model">l10n_br_ciel_it_account.fiscal.report</field>
+            <field name="arch" type="xml">
+                <form string="Export File">
+                    <group string="Filtros">
+                        <group>
+                            <field name="date_ini" string="Data Saída/Entrada Inicial"/>
+                            <field name="date_fim" string="Data Saída/Entrada Final"/>
+                            <field name="export_pdf"/>
+                            <field name="export_xml"/>
+                            <field name="export_excel"/>
+                            <field name="send_email"/>
+                            <field name="email_to" attrs="{'invisible': [('send_email', '=', False)]}"/>
+                        </group>
+                    </group>
+                    <footer>
+                        <button name="export_file" string="EXPORTAR" type="object" class="btn-primary"/>
+                        <button string="CANCELAR" class="btn-default" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_account_fiscal_report" model="ir.actions.act_window">
+            <field name="name">Relatório Documento Fiscal</field>
+            <field name="res_model">l10n_br_ciel_it_account.fiscal.report</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="view_account_fiscal_report"/>
+            <field name="target">new</field>
+        </record>
+
+        <menuitem id="account_reports_brasil_reports_menu" name="Relatórios Apuração Impostos" parent="account.menu_finance_reports" sequence="3"/>
+        <menuitem id="menu_account_fiscal_report" name="Documentos Fiscais" action="action_account_fiscal_report" parent="l10n_br_ciel_it_account.account_reports_brasil_reports_menu" sequence="200"/>
+
+        <record id="view_account_apuracao_icms_report" model="ir.ui.view">
+            <field name="name">Relatório Apuração ICMS</field>
+            <field name="model">l10n_br_ciel_it_account.fiscal.icms.report</field>
+            <field name="arch" type="xml">
+                <form string="Export File">
+                    <group string="Filtros">
+                        <group>
+                            <field name="date_ini" string="Data Saída/Entrada Inicial"/>
+                            <field name="date_fim" string="Data Saída/Entrada Final"/>
+                        </group>
+                    </group>
+                    <footer>
+                        <button name="export_file" string="EXPORTAR" type="object" class="btn-primary"/>
+                        <button string="CANCELAR" class="btn-default" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_account_apuracao_icms_report" model="ir.actions.act_window">
+            <field name="name">Relatório Apuração ICMS</field>
+            <field name="res_model">l10n_br_ciel_it_account.fiscal.icms.report</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="view_account_apuracao_icms_report"/>
+            <field name="target">new</field>
+        </record>
+
+        <menuitem id="menu_account_apuracao_icms_report" name="Relatório Apuração ICMS" action="action_account_apuracao_icms_report" parent="l10n_br_ciel_it_account.account_reports_brasil_reports_menu" sequence="310"/>
+
+        <record id="view_account_apuracao_ipi_report" model="ir.ui.view">
+            <field name="name">Relatório Apuração IPI</field>
+            <field name="model">l10n_br_ciel_it_account.fiscal.ipi.report</field>
+            <field name="arch" type="xml">
+                <form string="Export File">
+                    <group string="Filtros">
+                        <group>
+                            <field name="date_ini" string="Data Saída/Entrada Inicial"/>
+                            <field name="date_fim" string="Data Saída/Entrada Final"/>
+                        </group>
+                    </group>
+                    <footer>
+                        <button name="export_file" string="EXPORTAR" type="object" class="btn-primary"/>
+                        <button string="CANCELAR" class="btn-default" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_account_apuracao_ipi_report" model="ir.actions.act_window">
+            <field name="name">Relatório Apuração IPI</field>
+            <field name="res_model">l10n_br_ciel_it_account.fiscal.ipi.report</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="view_account_apuracao_ipi_report"/>
+            <field name="target">new</field>
+        </record>
+
+        <menuitem id="menu_account_apuracao_ipi_report" name="Relatório Apuração IPI" action="action_account_apuracao_ipi_report" parent="l10n_br_ciel_it_account.account_reports_brasil_reports_menu" sequence="320"/>
+
+        <record id="view_account_apuracao_piscofins_report" model="ir.ui.view">
+            <field name="name">Relatório Apuração PIS COFINS</field>
+            <field name="model">l10n_br_ciel_it_account.fiscal.piscofins.report</field>
+            <field name="arch" type="xml">
+                <form string="Export File">
+                    <group string="Filtros">
+                        <group>
+                            <field name="date_ini" string="Data Saída/Entrada Inicial"/>
+                            <field name="date_fim" string="Data Saída/Entrada Final"/>
+                        </group>
+                    </group>
+                    <footer>
+                        <button name="export_file" string="EXPORTAR" type="object" class="btn-primary"/>
+                        <button string="CANCELAR" class="btn-default" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_account_apuracao_piscofins_report" model="ir.actions.act_window">
+            <field name="name">Relatório Apuração PIS COFINS</field>
+            <field name="res_model">l10n_br_ciel_it_account.fiscal.piscofins.report</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="view_account_apuracao_piscofins_report"/>
+            <field name="target">new</field>
+        </record>
+
+        <menuitem id="menu_account_apuracao_piscofins_report" name="Relatório Apuração PIS COFINS" action="action_account_apuracao_piscofins_report" parent="l10n_br_ciel_it_account.account_reports_brasil_reports_menu" sequence="330"/>
+
+    </data>
+</odoo>

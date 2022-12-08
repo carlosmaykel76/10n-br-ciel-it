@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="0">
+
+        <record id="comissao_regras_rule_multi_company" model="ir.rule">
+            <field name="name">comissao_regras multi-company</field>
+            <field name="model_id" ref="l10n_br_ciel_it_account.model_l10n_br_ciel_it_account_comissao_regras"/>
+            <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+            <field name="global" eval="True"/>
+        </record>
+
+        <record id="comissao_rule_multi_company" model="ir.rule">
+            <field name="name">comissao multi-company</field>
+            <field name="model_id" ref="l10n_br_ciel_it_account.model_l10n_br_ciel_it_account_comissao"/>
+            <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+            <field name="global" eval="True"/>
+        </record>
+
+        <record id="comissao_line_rule_multi_company" model="ir.rule">
+            <field name="name">comissao_line multi-company</field>
+            <field name="model_id" ref="l10n_br_ciel_it_account.model_l10n_br_ciel_it_account_comissao_line"/>
+            <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+            <field name="global" eval="True"/>
+        </record>
+
+        <record id="sped_fiscal_uf_difal_fcp_rule_multi_company" model="ir.rule">
+            <field name="name">sped_fiscal_uf_difal_fcp multi-company</field>
+            <field name="model_id" ref="l10n_br_ciel_it_account.model_l10n_br_ciel_it_account_sped_fiscal_uf_difal_fcp"/>
+            <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+            <field name="global" eval="True"/>
+        </record>
+
+        <record id="sped_fiscal_uf_icmsst_rule_multi_company" model="ir.rule">
+            <field name="name">sped_fiscal_uf_icmsst multi-company</field>
+            <field name="model_id" ref="l10n_br_ciel_it_account.model_l10n_br_ciel_it_account_sped_fiscal_uf_icmsst"/>
+            <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+            <field name="global" eval="True"/>
+        </record>
+
+        <record id="account_move_referencia_rule_multi_company" model="ir.rule">
+            <field name="name">account_move_referencia multi-company</field>
+            <field name="model_id" ref="l10n_br_ciel_it_account.model_l10n_br_ciel_it_account_account_move_referencia"/>
+            <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+            <field name="global" eval="True"/>
+        </record>
+
+        <record id="mdfe_rule_multi_company" model="ir.rule">
+            <field name="name">mdfe multi-company</field>
+            <field name="model_id" ref="l10n_br_ciel_it_account.model_l10n_br_ciel_it_account_mdfe"/>
+            <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+            <field name="global" eval="True"/>
+        </record>
+
+        <record id="tipo_documento_mdfe_rule_multi_company" model="ir.rule">
+            <field name="name">tipo_documento_mdfe multi-company</field>
+            <field name="model_id" ref="l10n_br_ciel_it_account.model_l10n_br_ciel_it_account_tipo_documento_mdfe"/>
+            <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+            <field name="global" eval="True"/>
+        </record>
+
+        <record id="tipo_cobranca_rule_multi_company" model="ir.rule">
+            <field name="name">tipo_cobranca multi-company</field>
+            <field name="model_id" ref="l10n_br_ciel_it_account.model_l10n_br_ciel_it_account_tipo_cobranca"/>
+            <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+            <field name="global" eval="True"/>
+        </record>
+
+        <record id="di_rule_multi_company" model="ir.rule">
+            <field name="name">di multi-company</field>
+            <field name="model_id" ref="l10n_br_ciel_it_account.model_l10n_br_ciel_it_account_di"/>
+            <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+            <field name="global" eval="True"/>
+        </record>
+
+        <record id="di_despesa_rule_multi_company" model="ir.rule">
+            <field name="name">di_despesa multi-company</field>
+            <field name="model_id" ref="l10n_br_ciel_it_account.model_l10n_br_ciel_it_account_di_despesa"/>
+            <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+            <field name="global" eval="True"/>
+        </record>
+
+        <record id="di_line_rule_multi_company" model="ir.rule">
+            <field name="name">di_line multi-company</field>
+            <field name="model_id" ref="l10n_br_ciel_it_account.model_l10n_br_ciel_it_account_di_line"/>
+            <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+            <field name="global" eval="True"/>
+        </record>
+
+        <record id="di_adicao_rule_multi_company" model="ir.rule">
+            <field name="name">di_adicao multi-company</field>
+            <field name="model_id" ref="l10n_br_ciel_it_account.model_l10n_br_ciel_it_account_di_adicao"/>
+            <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+            <field name="global" eval="True"/>
+        </record>
+
+        <record id="di_moeda_rule_multi_company" model="ir.rule">
+            <field name="name">di_moeda multi-company</field>
+            <field name="model_id" ref="l10n_br_ciel_it_account.model_l10n_br_ciel_it_account_di_moeda"/>
+            <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+            <field name="global" eval="True"/>
+        </record>
+
+        <record id="nfe_xml_rule_multi_company" model="ir.rule">
+            <field name="name">nfe_xml multi-company</field>
+            <field name="model_id" ref="l10n_br_ciel_it_account.model_l10n_br_ciel_it_account_nfe_xml"/>
+            <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+            <field name="global" eval="True"/>
+        </record>
+
+        <record id="dfe_rule_multi_company" model="ir.rule">
+            <field name="name">dfe multi-company</field>
+            <field name="model_id" ref="l10n_br_ciel_it_account.model_l10n_br_ciel_it_account_dfe"/>
+            <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+            <field name="global" eval="True"/>
+        </record>
+
+        <record id="dfe_pagamento_rule_multi_company" model="ir.rule">
+            <field name="name">dfe_pagamento multi-company</field>
+            <field name="model_id" ref="l10n_br_ciel_it_account.model_l10n_br_ciel_it_account_dfe_pagamento"/>
+            <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+            <field name="global" eval="True"/>
+        </record>
+
+        <record id="dfe_referencia_rule_multi_company" model="ir.rule">
+            <field name="name">dfe_referencia multi-company</field>
+            <field name="model_id" ref="l10n_br_ciel_it_account.model_l10n_br_ciel_it_account_dfe_referencia"/>
+            <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+            <field name="global" eval="True"/>
+        </record>
+
+        <record id="dfe_line_rule_multi_company" model="ir.rule">
+            <field name="name">dfe_line multi-company</field>
+            <field name="model_id" ref="l10n_br_ciel_it_account.model_l10n_br_ciel_it_account_dfe_line"/>
+            <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+            <field name="global" eval="True"/>
+        </record>
+
+        <record id="inutilizar_nfe_rule_multi_company" model="ir.rule">
+            <field name="name">inutilizar_nfe multi-company</field>
+            <field name="model_id" ref="l10n_br_ciel_it_account.model_l10n_br_ciel_it_account_inutilizar_nfe"/>
+            <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+            <field name="global" eval="True"/>
+        </record>
+
+        <record id="ncm_uf_rule_multi_company" model="ir.rule">
+            <field name="name">ncm_uf multi-company</field>
+            <field name="model_id" ref="l10n_br_ciel_it_account.model_l10n_br_ciel_it_account_ncm_uf"/>
+            <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+            <field name="global" eval="True"/>
+        </record>
+
+        <record id="icms_beneficio_rule_multi_company" model="ir.rule">
+            <field name="name">icms_beneficio multi-company</field>
+            <field name="model_id" ref="l10n_br_ciel_it_account.model_l10n_br_ciel_it_account_icms_beneficio"/>
+            <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+            <field name="global" eval="True"/>
+        </record>
+
+        <record id="ipi_enquadramento_rule_multi_company" model="ir.rule">
+            <field name="name">ipi_enquadramento multi-company</field>
+            <field name="model_id" ref="l10n_br_ciel_it_account.model_l10n_br_ciel_it_account_ipi_enquadramento"/>
+            <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+            <field name="global" eval="True"/>
+        </record>
+
+        <record id="operacao_rule_multi_company" model="ir.rule">
+            <field name="name">operacao multi-company</field>
+            <field name="model_id" ref="l10n_br_ciel_it_account.model_l10n_br_ciel_it_account_operacao"/>
+            <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+            <field name="global" eval="True"/>
+        </record>
+
+        <record id="tipo_documento_rule_multi_company" model="ir.rule">
+            <field name="name">tipo_documento multi-company</field>
+            <field name="model_id" ref="l10n_br_ciel_it_account.model_l10n_br_ciel_it_account_tipo_documento"/>
+            <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+            <field name="global" eval="True"/>
+        </record>
+
+    </data>
+</odoo>

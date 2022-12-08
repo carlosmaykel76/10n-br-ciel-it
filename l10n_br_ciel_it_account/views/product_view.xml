@@ -1,0 +1,544 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<odoo>
+    <data>
+
+        <record id="view_product_template_inherit_search" model="ir.ui.view">
+            <field name="name">product.template.inherit.search</field>
+            <field name="model">product.template</field>
+            <field name="inherit_id" ref="product.product_template_search_view"/>
+            <field name="arch" type="xml">
+                
+                <xpath expr="//search" position="inside">
+                    <field name="l10n_br_ncm_id" string="(NCM) Classificação Fiscal"/>
+                </xpath>
+
+                <xpath expr="//search/group/filter[@name='categ_id']" position="after">
+                    <filter name="l10n_br_ncm_id" string="(NCM) Classificação Fiscal" context="{'group_by':'l10n_br_ncm_id'}"/>
+                </xpath>
+
+            </field>
+        </record>
+
+        <record id="product_supplierinfo_form_view_inherit" model="ir.ui.view">
+            <field name="name">product.supplierinfo.form.inherit</field>
+            <field name="model">product.supplierinfo</field>
+            <field name="inherit_id" ref="product.product_supplierinfo_form_view"/>
+            <field name="arch" type="xml">
+                <field name="product_code" position="after">
+                    <field name="fator_un"/>
+                </field>
+            </field>
+        </record>
+
+        <record id="view_product_template_inherit" model="ir.ui.view">
+            <field name="name">product.template.form.inherit</field>
+            <field name="model">product.template</field>
+            <field name="inherit_id" ref="product.product_template_form_view"/>
+            <field name="arch" type="xml">
+
+                <field name="categ_id" position="after">
+                    <field name="company_id" invisible="1"/>
+                    <field name="l10n_br_grupo_id"/>
+                </field>
+
+                <page name="inventory" position="after">
+                    <page name="fiscal" string="Fiscal">
+
+                        <group string="Dados fiscais" name="fiscal_data">
+                            <group>
+                                <field name="l10n_br_ncm_id"/>
+                                <field name="l10n_br_indescala"/>
+                                <field name="l10n_br_cnpj_fabricante"/>
+                                <field name="l10n_br_origem"/>
+                                <field name="l10n_br_fci"/>
+                                <field name="l10n_br_codigo_servico"/>
+                                <field name="l10n_br_codigo_tributacao_servico"/>
+                                <field name="l10n_br_fator_utrib"/>
+                            </group>
+                            <group>
+                                <group colspan="2" col="2">
+                                    <separator string="Informação Adicional para Nota Fiscal" colspan="4"/>
+                                    <field name="l10n_br_informacao_adicional" colspan="3" nolabel="1"/>
+                                </group>
+                            </group>
+                        </group>
+
+                    </page>
+                </page>
+            </field>
+        </record>
+
+        <record id="product_category_form_view_inherit" model="ir.ui.view">
+            <field name="name">product.category.form.inherit</field>
+            <field name="model">product.category</field>
+            <field name="inherit_id" ref="product.product_category_form_view"/>
+            <field name="arch" type="xml">
+                <xpath expr="//group[@name='first']" position="after">
+                    <group string="Fiscal">
+                        <field name="l10n_br_tipo_produto"/>
+                    </group>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="view_l10n_br_ncm_search" model="ir.ui.view">
+            <field name="name">ncm.search</field>
+            <field name="model">l10n_br_ciel_it_account.ncm</field>
+            <field name="arch" type="xml">
+                <search string="Search NCM">
+                    <field name="codigo_ncm"/>
+                    <field name="name"/>
+
+                    <group expand="0" string="Group By">
+                        <filter name="group_uom_id" string="Unidade de Medida" context="{'group_by': 'uom_id'}"/>
+                    </group>
+
+                </search>
+            </field>
+        </record>
+
+        <record id="view_l10n_br_ncm_tree" model="ir.ui.view">
+            <field name="name">ncm.tree</field>
+            <field name="model">l10n_br_ciel_it_account.ncm</field>
+            <field name="arch" type="xml">
+                <tree string="NCM">
+                    <field name="codigo_ncm"/>
+                    <field name="name"/>
+                    <field name="codigo_cest"/>
+                    <field name="uom_id" options="{'no_create': True}"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_l10n_br_ncm_form" model="ir.ui.view">
+            <field name="name">ncm.form</field>
+            <field name="model">l10n_br_ciel_it_account.ncm</field>
+            <field name="arch" type="xml">
+                <form string="NCM">
+                    <sheet>
+                        <group>
+                            <field name="codigo_ncm"/>
+                            <field name="name"/>
+                            <field name="codigo_cest"/>
+                            <field name="uom_id" options="{'no_create': True}"/>
+                            <field name="l10n_br_ipi_cst"/>
+                            <field name="l10n_br_ipi_aliquota"/>
+                            <field name="l10n_br_ipi_enq"/>
+                            <field name="l10n_br_pis_cst"/>
+                            <field name="l10n_br_pis_reducao_base"/>
+                            <field name="l10n_br_pis_aliquota"/>
+                            <field name="l10n_br_cofins_cst"/>
+                            <field name="l10n_br_cofins_reducao_base"/>
+                            <field name="l10n_br_cofins_aliquota"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_l10n_br_ncm" model="ir.actions.act_window">
+            <field name="name">Nomenclatura Comum do Mercosul (NCM)</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">l10n_br_ciel_it_account.ncm</field>
+            <field name="view_id" ref="view_l10n_br_ncm_tree"/>
+        </record>
+
+        <menuitem id="menu_l10n_br_ncm" action="l10n_br_ciel_it_account.action_l10n_br_ncm" parent="stock.menu_product_in_config_stock" sequence="200"/>
+
+        <record id="view_l10n_br_ncm_uf_search" model="ir.ui.view">
+            <field name="name">ncm.uf.search</field>
+            <field name="model">l10n_br_ciel_it_account.ncm.uf</field>
+            <field name="arch" type="xml">
+                <search string="Search NCM">
+                    <field name="state_de_id"/>
+                    <field name="state_para_id"/>
+
+                    <group expand="0" string="Group By">
+                        <filter name="l10n_br_ncm_id" string="NCM" context="{'group_by': 'l10n_br_ncm_id'}"/>
+                    </group>
+
+                </search>
+            </field>
+        </record>
+
+        <record id="view_l10n_br_ncm_uf_tree" model="ir.ui.view">
+            <field name="name">ncm.uf.tree</field>
+            <field name="model">l10n_br_ciel_it_account.ncm.uf</field>
+            <field name="arch" type="xml">
+                <tree string="NCM">
+                    <field name="state_de_id"/>
+                    <field name="state_para_id"/>
+                    <field name="l10n_br_ncm_id"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_l10n_br_ncm_uf_form" model="ir.ui.view">
+            <field name="name">ncm.uf.form</field>
+            <field name="model">l10n_br_ciel_it_account.ncm.uf</field>
+            <field name="arch" type="xml">
+                <form string="NCM">
+                    <sheet>
+                        <group>
+                            <field name="company_id" invisible="1"/>
+                            <field name="state_de_id"/>
+                            <field name="state_para_id"/>
+                            <field name="l10n_br_ncm_id"/>
+                            <field name="l10n_br_fcp_aliquota"/>
+
+                            <field name="l10n_br_icms_cst"/>
+                            <field name="l10n_br_icms_modalidade_base"/>
+                            <field name="l10n_br_icms_reducao_base"/>
+                            <field name="l10n_br_icms_aliquota"/>
+                        
+                            <field name="l10n_br_icmsst_modalidade_base"/>
+                            <field name="l10n_br_icmsst_reducao_base"/>
+                            <field name="l10n_br_icmsst_mva"/>
+                            <field name="l10n_br_icmsst_aliquota"/>
+                            <field name="l10n_br_icmsst_icmsfora"/>
+
+                            <field name="l10n_br_mensagem_fiscal_id"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_l10n_br_ncm_uf" model="ir.actions.act_window">
+            <field name="name">Nomenclatura Comum do Mercosul (NCM) por UF</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">l10n_br_ciel_it_account.ncm.uf</field>
+            <field name="view_id" ref="view_l10n_br_ncm_uf_tree"/>
+        </record>
+
+        <menuitem id="menu_l10n_br_ncm_uf" action="l10n_br_ciel_it_account.action_l10n_br_ncm_uf" parent="stock.menu_product_in_config_stock" sequence="210"/>
+
+        <record id="view_l10n_br_iest_uf_search" model="ir.ui.view">
+            <field name="name">iest.uf.search</field>
+            <field name="model">l10n_br_ciel_it_account.iest.uf</field>
+            <field name="arch" type="xml">
+                <search string="Search IE ST">
+                    <field name="state_de_id"/>
+                    <field name="state_para_id"/>
+                </search>
+            </field>
+        </record>
+
+        <record id="view_l10n_br_iest_uf_tree" model="ir.ui.view">
+            <field name="name">iest.uf.tree</field>
+            <field name="model">l10n_br_ciel_it_account.iest.uf</field>
+            <field name="arch" type="xml">
+                <tree string="IE ST">
+                    <field name="state_de_id"/>
+                    <field name="state_para_id"/>
+                    <field name="l10n_br_iest"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_l10n_br_iest_uf_form" model="ir.ui.view">
+            <field name="name">iest.uf.form</field>
+            <field name="model">l10n_br_ciel_it_account.iest.uf</field>
+            <field name="arch" type="xml">
+                <form string="IE ST">
+                    <sheet>
+                        <group>
+                            <field name="company_id" invisible="1"/>
+                            <field name="state_de_id"/>
+                            <field name="state_para_id"/>
+                            <field name="l10n_br_iest"/>
+                        </group>
+                    </sheet>
+                    <div class="o_attachment_preview"/>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers"/>
+                        <field name="activity_ids" widget="mail_activity"/>
+                        <field name="message_ids" widget="mail_thread"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_l10n_br_iest_uf" model="ir.actions.act_window">
+            <field name="name">Inscrição Estadual do Substituto Tributário</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">l10n_br_ciel_it_account.iest.uf</field>
+            <field name="view_id" ref="view_l10n_br_iest_uf_tree"/>
+        </record>
+
+        <menuitem id="menu_l10n_br_iest_uf" action="l10n_br_ciel_it_account.action_l10n_br_iest_uf" parent="stock.menu_product_in_config_stock" sequence="215"/>
+
+        <record id="view_l10n_br_ncm_cliente_uf_search" model="ir.ui.view">
+            <field name="name">ncm.cliente.uf.search</field>
+            <field name="model">l10n_br_ciel_it_account.ncm.cliente.uf</field>
+            <field name="arch" type="xml">
+                <search string="Search NCM">
+                    <field name="state_de_id"/>
+                    <field name="state_para_id"/>
+
+                    <group expand="0" string="Group By">
+                        <filter name="l10n_br_ncm_id" string="NCM" context="{'group_by': 'l10n_br_ncm_id'}"/>
+                    </group>
+
+                </search>
+            </field>
+        </record>
+
+        <record id="view_l10n_br_ncm_cliente_uf_tree" model="ir.ui.view">
+            <field name="name">ncm.cliente.uf.tree</field>
+            <field name="model">l10n_br_ciel_it_account.ncm.cliente.uf</field>
+            <field name="arch" type="xml">
+                <tree string="NCM">
+                    <field name="state_de_id"/>
+                    <field name="state_para_id"/>
+                    <field name="l10n_br_ncm_id"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_l10n_br_ncm_cliente_uf_form" model="ir.ui.view">
+            <field name="name">ncm.cliente.uf.form</field>
+            <field name="model">l10n_br_ciel_it_account.ncm.cliente.uf</field>
+            <field name="arch" type="xml">
+                <form string="NCM">
+                    <sheet>
+                        <group>
+                            <field name="company_id" invisible="1"/>
+                            <field name="state_de_id"/>
+                            <field name="state_para_id"/>
+                            <field name="l10n_br_ncm_id"/>
+
+                            <field name="partner_ids">
+                                <tree>
+                                    <field name="name"/>
+                                    <field name="l10n_br_cnpj"/>
+                                    <field name="l10n_br_cpf"/>
+                                    <field name="l10n_br_municipio_id"/>
+                                    <field name="state_id"/>
+                                </tree>
+                            </field>
+
+                            <field name="l10n_br_fcp_aliquota"/>
+
+                            <field name="l10n_br_icms_cst"/>
+                            <field name="l10n_br_icms_modalidade_base"/>
+                            <field name="l10n_br_icms_reducao_base"/>
+                            <field name="l10n_br_icms_aliquota"/>
+                        
+                            <field name="l10n_br_icmsst_modalidade_base"/>
+                            <field name="l10n_br_icmsst_reducao_base"/>
+                            <field name="l10n_br_icmsst_mva"/>
+                            <field name="l10n_br_icmsst_aliquota"/>
+                            <field name="l10n_br_icmsst_icmsfora"/>
+
+                            <field name="l10n_br_mensagem_fiscal_id"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_l10n_br_ncm_cliente_uf" model="ir.actions.act_window">
+            <field name="name">Nomenclatura Comum do Mercosul (NCM) por UF e Cliente</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">l10n_br_ciel_it_account.ncm.cliente.uf</field>
+            <field name="view_id" ref="view_l10n_br_ncm_cliente_uf_tree"/>
+        </record>
+
+        <menuitem id="menu_l10n_br_ncm_cliente_uf" action="l10n_br_ciel_it_account.action_l10n_br_ncm_cliente_uf" parent="stock.menu_product_in_config_stock" sequence="210"/>
+
+        <record id="view_l10n_br_icms_uf_search" model="ir.ui.view">
+            <field name="name">icms.uf.search</field>
+            <field name="model">l10n_br_ciel_it_account.icms.uf</field>
+            <field name="arch" type="xml">
+            <search string="Search ICMS">
+                    <field name="state_de_id"/>
+                    <field name="state_para_id"/>
+
+                    <group expand="0" string="Group By">
+                        <filter name="state_de_id" string="UF Origem" context="{'group_by': 'state_de_id'}"/>
+                        <filter name="state_para_id" string="UF Destino" context="{'group_by': 'state_para_id'}"/>
+                    </group>
+
+                </search>
+            </field>
+        </record>
+
+        <record id="view_l10n_br_icms_uf_tree" model="ir.ui.view">
+            <field name="name">icms.uf.tree</field>
+            <field name="model">l10n_br_ciel_it_account.icms.uf</field>
+            <field name="arch" type="xml">
+                <tree string="ICMS">
+                    <field name="state_de_id"/>
+                    <field name="state_para_id"/>
+                    <field name="l10n_br_icms_aliquota"/>
+                    <field name="l10n_br_icms_ext_aliquota"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_l10n_br_icms_uf_form" model="ir.ui.view">
+            <field name="name">icms.uf.form</field>
+            <field name="model">l10n_br_ciel_it_account.icms.uf</field>
+            <field name="arch" type="xml">
+                <form string="ICMS">
+                    <sheet>
+                        <group>
+                            <field name="state_de_id"/>
+                            <field name="state_para_id"/>
+                            <field name="l10n_br_icms_aliquota"/>
+                            <field name="l10n_br_icms_ext_aliquota"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_l10n_br_icms_uf" model="ir.actions.act_window">
+            <field name="name">ICMS por UF</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">l10n_br_ciel_it_account.icms.uf</field>
+            <field name="view_id" ref="view_l10n_br_icms_uf_tree"/>
+        </record>
+
+        <menuitem id="menu_l10n_br_icms_uf" action="l10n_br_ciel_it_account.action_l10n_br_icms_uf" parent="stock.menu_product_in_config_stock" sequence="220"/>
+
+        <record id="view_l10n_br_icms_beneficio_search" model="ir.ui.view">
+            <field name="name">icms.beneficio.search</field>
+            <field name="model">l10n_br_ciel_it_account.icms.beneficio</field>
+            <field name="arch" type="xml">
+                <search string="Search ICMS">
+                    <field name="l10n_br_ncm_id"/>
+                    <field name="l10n_br_cfop_id"/>
+                    <field name="l10n_br_icms_cst"/>
+                </search>
+            </field>
+        </record>
+
+        <record id="view_l10n_br_icms_beneficio_tree" model="ir.ui.view">
+            <field name="name">icms.beneficio.tree</field>
+            <field name="model">l10n_br_ciel_it_account.icms.beneficio</field>
+            <field name="arch" type="xml">
+                <tree string="ICMS">
+                    <field name="l10n_br_ncm_id"/>
+                    <field name="l10n_br_cfop_id"/>
+                    <field name="l10n_br_icms_cst"/>
+                    <field name="l10n_br_codigo_beneficio"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_l10n_br_icms_beneficio_form" model="ir.ui.view">
+            <field name="name">icms.beneficio.form</field>
+            <field name="model">l10n_br_ciel_it_account.icms.beneficio</field>
+            <field name="arch" type="xml">
+                <form string="ICMS">
+                    <sheet>
+                        <group>
+                            <field name="company_id" invisible="1"/>
+                            <field name="l10n_br_ncm_id"/>
+                            <field name="l10n_br_cfop_id"/>
+                            <field name="l10n_br_icms_cst"/>
+                            <field name="l10n_br_codigo_beneficio"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_l10n_br_icms_beneficio" model="ir.actions.act_window">
+            <field name="name">Código do Benefício ICMS</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">l10n_br_ciel_it_account.icms.beneficio</field>
+            <field name="view_id" ref="view_l10n_br_icms_beneficio_tree"/>
+        </record>
+
+        <menuitem id="menu_l10n_br_icms_beneficio" action="l10n_br_ciel_it_account.action_l10n_br_icms_beneficio" parent="stock.menu_product_in_config_stock" sequence="230"/>
+
+        <record id="view_l10n_br_ipi_enquadramento_search" model="ir.ui.view">
+            <field name="name">ipi.enquadramento.search</field>
+            <field name="model">l10n_br_ciel_it_account.ipi.enquadramento</field>
+            <field name="arch" type="xml">
+                <search string="Search IPI">
+                    <field name="l10n_br_ncm_id"/>
+                    <field name="l10n_br_cfop_id"/>
+                    <field name="l10n_br_ipi_cst"/>
+                </search>
+            </field>
+        </record>
+
+        <record id="view_l10n_br_ipi_enquadramento_tree" model="ir.ui.view">
+            <field name="name">ipi.enquadramento.tree</field>
+            <field name="model">l10n_br_ciel_it_account.ipi.enquadramento</field>
+            <field name="arch" type="xml">
+                <tree string="IPI">
+                    <field name="l10n_br_ncm_id"/>
+                    <field name="l10n_br_cfop_id"/>
+                    <field name="l10n_br_ipi_cst"/>
+                    <field name="l10n_br_codigo_enquadramento"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_l10n_br_ipi_enquadramento_form" model="ir.ui.view">
+            <field name="name">ipi.enquadramento.form</field>
+            <field name="model">l10n_br_ciel_it_account.ipi.enquadramento</field>
+            <field name="arch" type="xml">
+                <form string="IPI">
+                    <sheet>
+                        <group>
+                            <field name="company_id" invisible="1"/>
+                            <field name="l10n_br_ncm_id"/>
+                            <field name="l10n_br_cfop_id"/>
+                            <field name="l10n_br_ipi_cst"/>
+                            <field name="l10n_br_codigo_enquadramento"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_l10n_br_ipi_enquadramento" model="ir.actions.act_window">
+            <field name="name">Código do Enquadramento IPI</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">l10n_br_ciel_it_account.ipi.enquadramento</field>
+            <field name="view_id" ref="view_l10n_br_ipi_enquadramento_tree"/>
+        </record>
+
+        <menuitem id="menu_l10n_br_ipi_enquadramento" action="l10n_br_ciel_it_account.action_l10n_br_ipi_enquadramento" parent="stock.menu_product_in_config_stock" sequence="240"/>
+
+        <record id="view_l10n_br_product_group_tree" model="ir.ui.view">
+            <field name="name">product.group.tree</field>
+            <field name="model">l10n_br_ciel_it_account.product.group</field>
+            <field name="arch" type="xml">
+                <tree string="Grupo de Produtos">
+                    <field name="name"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_l10n_br_product_group_form" model="ir.ui.view">
+            <field name="name">product.group.form</field>
+            <field name="model">l10n_br_ciel_it_account.product.group</field>
+            <field name="arch" type="xml">
+                <form string="Grupo de Produtos">
+                    <sheet>
+                        <group>
+                            <field name="name"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_l10n_br_product_group" model="ir.actions.act_window">
+            <field name="name">Grupo de Produtos</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">l10n_br_ciel_it_account.product.group</field>
+            <field name="view_id" ref="view_l10n_br_product_group_tree"/>
+        </record>
+
+        <menuitem id="menu_l10n_br_product_group" action="l10n_br_ciel_it_account.action_l10n_br_product_group" parent="stock.menu_product_in_config_stock" sequence="210"/>
+
+    </data>
+</odoo>

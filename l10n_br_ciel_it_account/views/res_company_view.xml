@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="res_company_form_inherit" model="ir.ui.view">
+            <field name="name">res.company.form.inherit</field>
+            <field name="model">res.company</field>
+            <field name="inherit_id" ref="base.view_company_form"/>
+            <field name="arch" type="xml">
+
+                <xpath expr=".//field[@name='partner_id']" position="after">
+                    <field name="l10n_br_cnpj"/>
+                    <field name="l10n_br_razao_social"/>
+                    <field name="l10n_br_ie"/>
+                    <field name="l10n_br_im"/>
+                    <field name="l10n_br_cnae"/>
+                    <field name="l10n_br_regime_tributario"/>
+                    <field name="l10n_br_incidencia_cumulativa"/>
+                    <field name="l10n_br_exclui_icms_piscofins"/>
+                    <field name="l10n_br_fcp_interno_consumidor_final"/>
+                    <field name="l10n_br_icms_credito_aliquota"/>
+                    <field name="l10n_br_contador_partner_id"/>
+                </xpath>
+
+                <xpath expr=".//div[@class='o_address_format']" position="replace">
+                    <div class="o_address_format">
+                        <field name="street" placeholder="Street..." class="o_address_street"/>
+                        <field name="l10n_br_endereco_numero" placeholder="Número..." class="o_address_street"/>
+                        <field name="street2" placeholder="Complemento..." class="o_address_street"/>
+                        <field name="l10n_br_endereco_bairro" placeholder="Bairro..." class="o_address_street"/>
+                        <div class="o_row">
+                            <field name="city" placeholder="City" class="o_address_city" invisible="1"/>
+                            <field name="l10n_br_municipio_id" placeholder="Município" class="o_address_city" options='{"no_open": True}'/>
+                            <field name="state_id" class="o_address_state" placeholder="State" options='{"no_open": True}'/>
+                            <field name="zip" placeholder="ZIP" class="o_address_zip"/>
+                            <label for="l10n_br_consultar_cep" string="" class="fa fa-search oe_edit_only"/>
+                            <field name="l10n_br_consultar_cep" invisible="1"/>
+                        </div>
+                        <field name="country_id" placeholder="Country" class="o_address_country" options='{"no_open": True, "no_create": True}'/>
+                    </div>
+                </xpath>
+
+            </field>
+        </record>
+
+    </data>
+</odoo>

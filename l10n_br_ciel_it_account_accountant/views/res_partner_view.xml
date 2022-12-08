@@ -1,0 +1,19 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<odoo>
+    <data>
+
+        <record id="customer_statements_search_view_inherit" model="ir.ui.view">
+            <field name="name">customer.statements.search.inherit</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="account_followup.customer_statements_search_view"/>
+            <field name="arch" type="xml">
+                <filter name="inactive" position="before">
+                    <separator/>
+                    <filter string="Saldo a receber" name="filter_saldo_receber" domain="[('credit', '>', 0.00)]"/>
+                    <separator/>
+                </filter>
+            </field>
+        </record>
+
+    </data>
+</odoo>

@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="view_uom_inherit_search" model="ir.ui.view">
+            <field name="name">uom.inherit.search</field>
+            <field name="model">uom.uom</field>
+            <field name="inherit_id" ref="uom.uom_uom_view_search"/>
+            <field name="arch" type="xml">
+                <xpath expr="//search" position="inside">
+                    <field name="l10n_br_codigo_sefaz"/>
+                    <filter name="group_uom_sefaz" string="UoM Sefaz" context="{'group_by': 'l10n_br_codigo_sefaz'}"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="product_uom_form_view_inherit" model="ir.ui.view">
+            <field name="name">uom.uom.form.inherit</field>
+            <field name="model">uom.uom</field>
+            <field name="inherit_id" ref="uom.product_uom_form_view"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='category_id']" position="after">
+                    <field name="l10n_br_codigo_sefaz"/>
+                    <field name="l10n_br_codigo_comex_sefaz"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="product_uom_tree_view_inherit" model="ir.ui.view">
+            <field name="name">uom.uom.tree.inherit</field>
+            <field name="model">uom.uom</field>
+            <field name="inherit_id" ref="uom.product_uom_tree_view"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='name']" position="after">
+                    <field name="l10n_br_codigo_sefaz"/>
+                    <field name="l10n_br_codigo_comex_sefaz"/>
+                </xpath>
+            </field>
+        </record>
+
+    </data>
+</odoo>
